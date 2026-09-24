@@ -1,0 +1,18 @@
+{
+  "version": "douyin-manual-review-2026-09-10",
+  "platform": "douyin",
+  "surface": "manual_copy",
+  "reviewed_at": "2026-09-10T00:00:00+08:00",
+  "review_note": "尚未取得当前手动发布的官方字段上限与计数规则；开放 API 字段不直接适用于复制发布。核查日期不等于核验通过日期。",
+  "sources": [
+    {"id":"creator","url":"https://creator.douyin.com/creator-micro/content/upload","title":"抖音创作者中心发布入口","surface":"manual_copy","accessed_at":"2026-09-10T00:00:00+08:00","available":false,"excerpt":"本次未取得可读的发布字段限制；浏览器加载超时，待后续核实。"},
+    {"id":"openapi","url":"https://developer.open-douyin.com/docs/resource/zh-CN/dop/develop/openapi/video-management/douyin/video/create-video","title":"抖音开放平台视频文档入口","surface":"openapi","accessed_at":"2026-09-10T00:00:00+08:00","available":false,"excerpt":"本次只读到导航；开放 API 规则也不能直接套用到手动发布。"}
+  ],
+  "rules": [
+    {"field":"title","status":"unverified","maximum":null,"unit":null,"source_id":null,"verified_at":null,"valid_until":null},
+    {"field":"body","status":"unverified","maximum":null,"unit":null,"source_id":null,"verified_at":null,"valid_until":null},
+    {"field":"tags_count","status":"unverified","maximum":null,"unit":null,"source_id":null,"verified_at":null,"valid_until":null},
+    {"field":"tag_length","status":"unverified","maximum":null,"unit":null,"source_id":null,"verified_at":null,"valid_until":null},
+    {"field":"combined_text","status":"unverified","maximum":null,"unit":null,"source_id":null,"verified_at":null,"valid_until":null}
+  ]
+}

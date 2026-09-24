@@ -1,0 +1,50 @@
+.discovery-search .candidate-grid{align-items:start}
+.discovery-search .candidate-card .panel-heading{align-items:flex-start;gap:12px}
+.discovery-search .candidate-card h3{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;line-height:24px;min-height:48px;flex:1;min-width:0}
+.discovery-search .candidate-card .score-number{flex-shrink:0}
+.discovery-search .candidate-card .candidate-purpose{font-size:14px;line-height:24px;height:72px;margin:12px 0 16px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;overflow-wrap:anywhere}
+.candidate-assessment p{margin:0 0 12px}
+.candidate-assessment strong{display:block;margin-bottom:4px}
+.candidate-reason,.candidate-barrier,.comparison-preview{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.candidate-reason{line-height:22px;height:44px;-webkit-line-clamp:2}
+.candidate-barrier{line-height:22px;height:22px;-webkit-line-clamp:1}
+.candidate-meta{display:flex;align-items:center;gap:10px;white-space:nowrap;font-size:11px;line-height:20px;color:#98a4ae}
+.candidate-meta .candidate-missing{color:#e3bd79}
+.candidate-actions{border-top:1px solid #343842;padding-top:12px;margin-top:14px;display:grid;gap:10px}
+.candidate-secondary{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.candidate-secondary button{font-size:12px;padding:6px 10px;min-height:36px}
+.candidate-secondary .check-label{font-size:12px;align-items:center;margin:0;gap:6px;white-space:nowrap}
+.candidate-secondary input{margin:0}
+.candidate-actions .candidate-import{width:100%;font-size:12px;min-height:40px}
+.comparison .comparison-preview{-webkit-line-clamp:3;line-height:22px;max-height:66px}
+.comparison .comparison-tool{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere;text-align:left;background:transparent;border:0;padding:0;font:inherit;line-height:22px;color:#9be6f2}
+.hexing-workspace .candidate-dialog{position:fixed;inset:0;margin:auto;width:min(620px,calc(100vw - 32px));max-height:calc(100dvh - 40px);padding:28px;background:#1b1d22;color:#f3f5f8;border:1px solid #43525b;border-radius:20px;overflow:auto}
+.candidate-dialog::backdrop{background:#080b10c9;backdrop-filter:blur(5px)}
+.candidate-dialog h2{font-size:24px;line-height:1.4;overflow-wrap:anywhere;margin:0 0 18px}
+.candidate-dialog h2:focus{outline:none}
+.candidate-dialog h3{margin:24px 0 8px;font-size:14px}
+.candidate-dialog p{font-size:14px;line-height:1.8;color:#b9c3cb;white-space:pre-wrap;overflow-wrap:anywhere}
+.candidate-dialog pre{overflow-wrap:anywhere}
+.candidate-dialog small{font-size:12px;color:#98a4ae}
+.candidate-dialog-actions{position:sticky;bottom:-28px;margin:20px -4px -4px;padding:16px 4px 4px;display:flex;align-items:center;gap:12px;background:#1b1d22}
+.candidate-dialog-actions :is(a,button){font-size:13px;min-height:44px}
+@media(max-width:550px){.hexing-workspace .candidate-dialog{padding:22px;max-height:calc(100dvh - 24px)}.candidate-dialog h2{font-size:21px}.candidate-dialog-actions{bottom:-22px}.candidate-meta{gap:8px}}
+.evaluation-summary{margin:12px 0 20px;padding:16px 20px;border:1px solid #43525b;border-radius:12px;color:#c3ced5}
+.evaluation-summary p{margin:8px 0;font-size:13px;line-height:1.7}
+.evaluation-summary small{font-size:12px;color:#98a4ae}
+.candidate-status{display:inline-block;font-size:12px;line-height:22px;color:#a9b8c4;margin-top:6px}
+.candidate-status[data-status="pending"]{color:#e3bd79}
+.candidate-status[data-status="recommended"]{color:#9be6cc}
+.candidate-card .score-number small{display:block;font-size:11px;font-weight:400;line-height:18px;text-align:right}
+.source-detail-link{display:inline-block;font-size:12px!important;color:#9be6f2;background:transparent;border:0;padding:4px 0;margin:4px 8px 0 0;text-decoration:underline;cursor:pointer}
+.evaluation-technical{margin-top:20px}
+.evaluation-technical pre{max-height:360px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+.candidate-dialog .mode-note{font-size:13px;line-height:1.8}
+.candidate-dialog .mode-note ul{padding-left:20px}
+.discovery-search .candidate-brief{margin:16px 0;display:grid;gap:12px}
+.candidate-brief>div{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;align-items:baseline}
+.candidate-brief dt{font-size:12px;color:#98a4ae;line-height:22px}
+.candidate-brief dd{margin:0;font-size:13px;line-height:22px;min-height:44px;overflow-wrap:anywhere;color:#d3dbe1}
+.candidate-brief dd[data-missing="true"]{color:#89949e}
+.comparison .comparison-preview{display:block;max-height:none;overflow:visible}
+.candidate-dialog .brief-source-quote{padding:10px 14px;border-left:2px solid #607d8b;background:#15181e}

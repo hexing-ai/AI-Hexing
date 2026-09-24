@@ -1,0 +1,476 @@
+{
+  "214d261b630b7474d36ff3acd7791f039095dc2c9301e403d35b4fc5a255e836": {
+    "version": "discovery-brief-v1",
+    "source_hash": "214d261b630b7474d36ff3acd7791f039095dc2c9301e403d35b4fc5a255e836",
+    "fields": {
+      "purpose": {
+        "text": "识别健身动作，辅助进行动作计数与分类。",
+        "evidence": [
+          {
+            "ref": "r653684949-f1",
+            "quote": "基于人体关键点检测的健身动作计数应用"
+          },
+          {
+            "ref": "r653684949-f1",
+            "quote": "动作姿势分类"
+          }
+        ]
+      },
+      "feature": {
+        "text": "通过人体关键点判断动作，包含深蹲、俯卧撑相关示例。",
+        "evidence": [
+          {
+            "ref": "r653684949-f1",
+            "quote": "对于类似深蹲和俯卧撑这样的常见运动，一个up和一个down是一个完整的动作"
+          }
+        ]
+      },
+      "usage": {
+        "text": "提供安卓端和电脑端实现，需要自行运行或构建。",
+        "evidence": [
+          {
+            "ref": "r653684949-f1",
+            "quote": "移动端部署目前完成了安卓应用的构建。"
+          },
+          {
+            "ref": "r653684949-f1",
+            "quote": "PC端部署使用了PyQt5"
+          }
+        ]
+      },
+      "requirements": {
+        "text": "安卓端需 Android Studio；电脑端使用 Python、PyQt5 等环境。",
+        "evidence": [
+          {
+            "ref": "r653684949-f1",
+            "quote": "Android 开发工具 - Android Studio 中进行修改、调试和生成 APK 文件"
+          },
+          {
+            "ref": "r653684949-f1",
+            "quote": "PC端部署使用了PyQt5，它是 Qt 应用程序框架在 Python 中的封装。"
+          }
+        ]
+      }
+    },
+    "origin": "source_reviewed_repair",
+    "repository": "ZHENGYANG-QIAN/AI-FITNESS"
+  },
+  "c63420ce01b764f3bae8916e34cd3ebcfb43cfe7ffa3f1caed3caa42e52e9a11": {
+    "version": "discovery-brief-v1",
+    "source_hash": "c63420ce01b764f3bae8916e34cd3ebcfb43cfe7ffa3f1caed3caa42e52e9a11",
+    "fields": {
+      "purpose": {
+        "text": "结合手表与力量训练记录，生成日常训练建议和复盘。",
+        "evidence": [
+          {
+            "ref": "r1170601643-f1",
+            "quote": "Coach Paddy reads your watch + strength-log data, turns it into actionable coaching (morning readiness, evening recaps, weekly reviews, adaptive plans)"
+          }
+        ]
+      },
+      "feature": {
+        "text": "结合睡眠、心率与训练负荷评估恢复状态，训练记录保存在本地。",
+        "evidence": [
+          {
+            "ref": "r1170601643-f1",
+            "quote": "adjusted by sleep, HRV, energy, RHR trend, and active injury"
+          },
+          {
+            "ref": "r1170601643-f1",
+            "quote": "records everything in **plain-text local files you own**"
+          }
+        ]
+      },
+      "usage": {
+        "text": "在 Claude Code 中使用教练技能，可另部署手机看板。",
+        "evidence": [
+          {
+            "ref": "r1170601643-f1",
+            "quote": "A data-driven, multi-sport AI fitness coach for [Claude Code]"
+          },
+          {
+            "ref": "r1170601643-f1",
+            "quote": "mobile dashboard you can deploy to Vercel"
+          }
+        ]
+      },
+      "requirements": {
+        "text": "需 Claude Code 并接入手表数据；Apple Watch 需另配快捷指令。",
+        "evidence": [
+          {
+            "ref": "r1170601643-f1",
+            "quote": "A data-driven, multi-sport AI fitness coach for [Claude Code]"
+          },
+          {
+            "ref": "r1170601643-f2",
+            "quote": "| Apple Watch | `fitness-coach.md` **and** `apple-watch-fitness-coach.md` | no MCP — set up the Shortcut (step 1) |"
+          }
+        ]
+      }
+    },
+    "origin": "source_reviewed_repair",
+    "repository": "BorisBW/claude-fitness-cn"
+  },
+  "42a62e1b1a0e59cb399ed6aa5303a1cff409396214230cfe2b75649534e76130": {
+    "version": "discovery-brief-v1",
+    "source_hash": "42a62e1b1a0e59cb399ed6aa5303a1cff409396214230cfe2b75649534e76130",
+    "fields": {
+      "purpose": {
+        "text": "用 AI 记录训练、安排计划，持续跟进个人健身过程。",
+        "evidence": [
+          {
+            "ref": "r1228695623-f1",
+            "quote": "一个带训练日志、属性成长、恢复判断的教练系统"
+          },
+          {
+            "ref": "r1228695623-f2",
+            "quote": "本周训练计划，由 AI 或用户维护。"
+          }
+        ]
+      },
+      "feature": {
+        "text": "把训练记录与 RPG 等级、属性成长和剧情推进结合。",
+        "evidence": [
+          {
+            "ref": "r1228695623-f1",
+            "quote": "训练记录、RPG 属性成长、剧情推进三者联动"
+          }
+        ]
+      },
+      "usage": {
+        "text": "下载仓库，在能读写本地文件的 AI 环境中对话使用。",
+        "evidence": [
+          {
+            "ref": "r1228695623-f1",
+            "quote": "克隆或下载本仓库到任意目录。"
+          },
+          {
+            "ref": "r1228695623-f1",
+            "quote": "在 AI 对话中说“开始训练”或“初始化档案”。"
+          },
+          {
+            "ref": "r1228695623-f1",
+            "quote": "只要你的 AI 环境能读写本地文件，就能玩"
+          }
+        ]
+      },
+      "requirements": {
+        "text": "需 AI 环境持续读写本地文件；Python 仅为可选脚本依赖。",
+        "evidence": [
+          {
+            "ref": "r1228695623-f1",
+            "quote": "可持续访问同一工作区中的多个 Markdown 文件"
+          },
+          {
+            "ref": "r1228695623-f2",
+            "quote": "可选：Python 3.8+（用于脚本，没有也能跑）"
+          }
+        ]
+      }
+    },
+    "origin": "source_reviewed_repair",
+    "repository": "chenklein26-maker/fitness-coach-rpg"
+  },
+  "ff8b286f7bf55d18f4965bd100d74b5c2a9295bc2d1d20cdb66cedb377f4d954": {
+    "version": "discovery-brief-v1",
+    "source_hash": "ff8b286f7bf55d18f4965bd100d74b5c2a9295bc2d1d20cdb66cedb377f4d954",
+    "fields": {
+      "purpose": {
+        "text": "识别俯卧撑和仰卧起坐，记录动作次数。",
+        "evidence": [
+          {
+            "ref": "r803719469-f1",
+            "quote": "目前小程序中提供了两种运动模式，分别是俯卧撑和仰卧起坐。"
+          },
+          {
+            "ref": "r803719469-f1",
+            "quote": "对其标准动作与各类非标准动作分别计数"
+          }
+        ]
+      },
+      "feature": {
+        "text": "利用姿态关键点区分标准与非标准动作，并保留运动历史。",
+        "evidence": [
+          {
+            "ref": "r803719469-f1",
+            "quote": "对其标准动作与各类非标准动作分别计数"
+          },
+          {
+            "ref": "r803719469-f1",
+            "quote": "同时将运动记录上传至历史记录存储在数据库中"
+          }
+        ]
+      },
+      "usage": {
+        "text": "微信小程序采集图像，交给 Python 后端识别并返回结果。",
+        "evidence": [
+          {
+            "ref": "r803719469-f1",
+            "quote": "由于前端采用的是小程序实现，后端采用的是Python进行姿态特征点的识别。"
+          },
+          {
+            "ref": "r803719469-f1",
+            "quote": "再将上述的各关节的角度返回给前端"
+          }
+        ]
+      },
+      "requirements": {
+        "text": "需配套小程序、Python/Flask 后端和微信云数据库。",
+        "evidence": [
+          {
+            "ref": "r803719469-f1",
+            "quote": "后端采用Flask接口实现"
+          },
+          {
+            "ref": "r803719469-f1",
+            "quote": "本项目采用Python来实现姿态识别检测"
+          },
+          {
+            "ref": "r803719469-f1",
+            "quote": "采用微信云平台作为数据库"
+          },
+          {
+            "ref": "r803719469-f1",
+            "quote": "前端采用的是小程序实现"
+          }
+        ]
+      }
+    },
+    "origin": "source_reviewed_repair",
+    "repository": "Samuel-Pan/Human-Pose-Recognition-AI-Fitness-System"
+  },
+  "06e2606817bbcfbfc69eddd92fcf5fad2cbb05cedb926f47cdd01cc398a7cd67": {
+    "version": "discovery-brief-v1",
+    "source_hash": "06e2606817bbcfbfc69eddd92fcf5fad2cbb05cedb926f47cdd01cc398a7cd67",
+    "fields": {
+      "purpose": {
+        "text": "通过摄像头识别健身动作，自动计数并播报反馈。",
+        "evidence": [
+          {
+            "ref": "r1132698115-f1",
+            "quote": "通过摄像头实时追踪您的运动姿态，自动计数并提供语音反馈。"
+          }
+        ]
+      },
+      "feature": {
+        "text": "支持本地摄像头、网络摄像头和视频文件，显示骨骼追踪。",
+        "evidence": [
+          {
+            "ref": "r1132698115-f1",
+            "quote": "支持本地摄像头、RTSP 网络摄像头、本地视频文件"
+          },
+          {
+            "ref": "r1132698115-f1",
+            "quote": "实时显示人体骨骼和关键角度"
+          }
+        ]
+      },
+      "usage": {
+        "text": "自行部署后通过浏览器使用，可选择 Docker 或本地 Python 运行。",
+        "evidence": [
+          {
+            "ref": "r1132698115-f1",
+            "quote": "可通过 Web 界面远程访问。"
+          },
+          {
+            "ref": "r1132698115-f1",
+            "quote": "方式二：Docker 部署"
+          },
+          {
+            "ref": "r1132698115-f1",
+            "quote": "方式三：本地 Python 运行"
+          }
+        ]
+      },
+      "requirements": {
+        "text": "需摄像头或视频源；按部署方式准备 Docker 或 Python 3.9 环境。",
+        "evidence": [
+          {
+            "ref": "r1132698115-f1",
+            "quote": "支持本地摄像头、RTSP 网络摄像头、本地视频文件"
+          },
+          {
+            "ref": "r1132698115-f1",
+            "quote": "| **Python** | 3.9 | 3.9 或 3.10 |"
+          },
+          {
+            "ref": "r1132698115-f1",
+            "quote": "方式二：Docker 部署"
+          },
+          {
+            "ref": "r1132698115-f1",
+            "quote": "方式三：本地 Python 运行"
+          }
+        ]
+      }
+    },
+    "origin": "source_reviewed_repair",
+    "repository": "yanfeng17/Good-GYM"
+  },
+  "4048f01ec0e60b1669a2c1dc85281e59fc76ecf863bd4f8258e6d9284c7209dc": {
+    "version": "discovery-brief-v1",
+    "source_hash": "4048f01ec0e60b1669a2c1dc85281e59fc76ecf863bd4f8258e6d9284c7209dc",
+    "fields": {
+      "purpose": {
+        "text": "检测哑铃抬举动作，判断动作是否到位并自动计数。",
+        "evidence": [
+          {
+            "ref": "r406212162-f1",
+            "quote": "基于Paddlehub的哑铃抬举检测及自动计数"
+          },
+          {
+            "ref": "r406212162-f1",
+            "quote": "以夹角为核心 判断哑铃动作是否到位"
+          }
+        ]
+      },
+      "feature": {
+        "text": "根据肩、肘、腕的夹角变化计数，区分左臂和右臂。",
+        "evidence": [
+          {
+            "ref": "r406212162-f1",
+            "quote": "手腕、手肘、肩部所构成的向量夹角"
+          },
+          {
+            "ref": "r406212162-f2",
+            "quote": "【注：这里区分了左臂or右臂】"
+          }
+        ]
+      },
+      "usage": {
+        "text": "运行代码，通过本地摄像头识别动作并实时显示计数。",
+        "evidence": [
+          {
+            "ref": "r406212162-f1",
+            "quote": "使用OpenCV打开本地摄像头获取动态页面，并将项目检测结果实时展示在页面中"
+          }
+        ]
+      },
+      "requirements": {
+        "text": "需本地摄像头、PaddleHub 姿态模型和 OpenCV 运行环境。",
+        "evidence": [
+          {
+            "ref": "r406212162-f1",
+            "quote": "使用OpenCV打开本地摄像头"
+          },
+          {
+            "ref": "r406212162-f1",
+            "quote": "本项目采用Paddlehub"
+          },
+          {
+            "ref": "r406212162-f1",
+            "quote": "hub install human_pose_estimation_resnet50_mpii==1.1.1"
+          }
+        ]
+      }
+    },
+    "origin": "source_reviewed_repair",
+    "repository": "thomas-yanxin/AItrainer"
+  },
+  "2b19786250013e71e0575ba2c6e81f9b432d64050390aa6927cdf2cf4552064b": {
+    "version": "discovery-brief-v1",
+    "source_hash": "2b19786250013e71e0575ba2c6e81f9b432d64050390aa6927cdf2cf4552064b",
+    "fields": {
+      "purpose": {
+        "text": "AI 健身助手的课程后端项目，包含训练计划与报告模块说明。",
+        "evidence": [
+          {
+            "ref": "description",
+            "quote": "大作业, 基于大语言模型和视觉模型的AI健身助手(后端)"
+          },
+          {
+            "ref": "r718530284-f1",
+            "quote": "训练计划生成和管理"
+          },
+          {
+            "ref": "r718530284-f1",
+            "quote": "运动报告生成"
+          }
+        ]
+      },
+      "feature": {
+        "text": "资料列出个性化训练计划、动作评测和健康报告，完成度需核实。",
+        "evidence": [
+          {
+            "ref": "r718530284-f1",
+            "quote": "根据个人的身体状况生成训练计划"
+          },
+          {
+            "ref": "r718530284-f1",
+            "quote": "动作评测(figure-based)"
+          },
+          {
+            "ref": "r718530284-f1",
+            "quote": "健康报告"
+          }
+        ]
+      },
+      "usage": {
+        "text": "需要配套前端与后端自行部署，当前仓库不是完整成品入口。",
+        "evidence": [
+          {
+            "ref": "r718530284-f1",
+            "quote": "前端代码库"
+          },
+          {
+            "ref": "r718530284-f1",
+            "quote": "https://github.com/curtain-call/JavaEE_Class_Assignment_Frontend"
+          },
+          {
+            "ref": "description",
+            "quote": "AI健身助手(后端)"
+          }
+        ]
+      },
+      "requirements": {
+        "text": "涉及数据库与 OpenAI 接口；详细安装和账号配置资料不足。",
+        "evidence": [
+          {
+            "ref": "r718530284-f1",
+            "quote": "数据库设计"
+          },
+          {
+            "ref": "r718530284-f1",
+            "quote": "OpenAI API调用模块实现"
+          }
+        ]
+      }
+    },
+    "origin": "source_reviewed_repair",
+    "repository": "curtain-call/JavaEE_Class_Assignment_Backend"
+  },
+  "0fe1c480560b7ddc83348d03242a6109d889086665bea8c24bb3f61c71cbcf22": {
+    "version": "discovery-brief-v1",
+    "source_hash": "0fe1c480560b7ddc83348d03242a6109d889086665bea8c24bb3f61c71cbcf22",
+    "fields": {
+      "purpose": {
+        "text": "宝德龙智能健身项目，具体健身功能资料不足。",
+        "evidence": [
+          {
+            "ref": "r200666376-f1",
+            "quote": "宝德龙智能健身系统"
+          }
+        ]
+      },
+      "feature": {
+        "text": "资料不足",
+        "evidence": []
+      },
+      "usage": {
+        "text": "资料不足",
+        "evidence": []
+      },
+      "requirements": {
+        "text": "开发环境列出 VS2017、WPF 和 .NET 4.5；未提供完整使用说明。",
+        "evidence": [
+          {
+            "ref": "r200666376-f1",
+            "quote": "* VS2017\n* WPF\n* .NET 4.5"
+          }
+        ]
+      }
+    },
+    "origin": "source_reviewed_repair",
+    "repository": "Avalon305/AI_Sports"
+  }
+}

@@ -1,0 +1,2 @@
+# Keep the vendored MIT engine byte-for-byte; upstream contains blank lines at EOF.
+frontend/lib/bloub/*.ts whitespace=-blank-at-eof

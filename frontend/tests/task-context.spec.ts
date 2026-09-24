@@ -1,0 +1,77 @@
+import { test, expect } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { randomUUID } from 'node:crypto';
+
+test('task source edits and creator notes preserve drafts and require fresh confirmation', async ({page})=>{
+  const credentials=JSON.parse(readFileSync(path.resolve(__dirname,'../../data/browser-qa/credentials.json'),'utf8'));
+  await page.goto('/login');
+  await page.getByLabel('账户',{exact:true}).fill(credentials.login_name);
+  await page.getByLabel('密码',{exact:true}).fill(credentials.password);
+  await page.getByRole('button',{name:'进入工作台'}).click();
+  await expect(page.getByRole('heading',{name:'发现工具',exact:true})).toBeVisible();
+  const me=(await (await page.request.get('/api/v1/auth/me')).json()).data;
+  const mutation=async(route:string,body:unknown,method='POST')=>{
+    const r=await page.request.fetch('/api/v1'+route,{method,data:body,headers:{Origin:'http://127.0.0.1:13060','X-CSRF-Token':me.csrf_token,'Idempotency-Key':randomUUID()}});
+    expect(r.ok()).toBeTruthy();return (await r.json()).data;
+  };
+  const get=async(route:string)=>(await (await page.request.get('/api/v1'+route)).json()).data;
+  const job=async(id:string)=>{await expect.poll(async()=>(await get('/jobs/'+id)).status).toBe('succeeded');return get('/jobs/'+id);};
+  const imported=await job((await mutation('/imports',{repository_url:'https://github.com/demo/context-tool'})).job_id);
+  const analyzed=await job((await mutation('/snapshots/'+imported.result_ref.snapshot_id+'/analyses',{audience:'资料调整验收观众'})).job_id);
+  const analysis=await get('/analyses/'+analyzed.result_ref.analysis_id);
+  const review=await mutation('/analyses/'+analysis.id+'/reviews',{primary_highlight_id:analysis.highlights[0].id,confirmed:true});
+  const task=await mutation('/tasks',{review_id:review.id,audience:analysis.audience});
+  await job((await mutation(`/tasks/${task.id}/generations`,{task_id:task.id,mode:'joint',expected_revision:task.revision})).job_id);
+  for(const kind of ['script','copy']){
+    const data=await get(`/tasks/${task.id}/texts`);const v=data.versions.find((v:{kind:string})=>v.kind===kind);
+    await mutation(`/tasks/${task.id}/texts/${v.id}/adopt`,{expected_revision:data.task.revision});
+    const now=await get('/tasks/'+task.id);
+    await mutation(`/tasks/${task.id}/texts/${v.id}/confirm`,{expected_revision:now.revision,facts_reviewed:true});
+  }
+  await page.goto('/tasks/'+task.id);
+  await page.getByText('任务资料与实测记录',{exact:true}).click();
+  const panel=page.getByRole('region',{name:'任务资料与实测记录',exact:true});
+  await expect(panel.getByLabel('任务目标受众')).toHaveValue('资料调整验收观众');
+  await panel.getByLabel('任务目标受众').fill('有桌面导出需求的创作者');
+  await panel.getByRole('button',{name:'添加实测记录'}).click();
+  await panel.getByLabel('实测日期（UTC）').fill(new Date().toISOString().slice(0,10));
+  await panel.getByLabel('环境与工具版本').fill('隔离浏览器验收 / v1');
+  await panel.getByLabel('实测操作',{exact:true}).fill('使用测试数据执行一次导出');
+  await panel.getByLabel('观察结果').fill('取得模拟导出文件');
+  await panel.getByLabel('限制与未验证项').fill('仅为工程测试，不是真实工具实测');
+  const reviewed=panel.getByRole('checkbox');
+  await reviewed.check();await panel.getByRole('button',{name:'保存任务资料',exact:true}).click();
+  await expect(panel.getByRole('status')).toContainText('任务资料已保存');
+  await expect(panel).toContainText('test-');
+  const updated=await get('/tasks/'+task.id);
+  expect(updated.current_script.confirmed_at).toBeNull();
+  expect(updated.current_copy.confirmed_at).toBeNull();
+  await expect(page.getByRole('heading',{name:/口播 · 当前版本 · 资料已变/})).toBeVisible();
+  const studio=page.locator('.text-studio');
+  await studio.getByRole('checkbox').check();
+  await studio.getByRole('button',{name:'确认口播',exact:true}).click();
+  await expect(studio.getByRole('heading',{name:/口播 · 当前版本 · 已确认/})).toBeVisible();
+  await studio.getByRole('tab',{name:'发布文案',exact:true}).click();
+  await studio.getByRole('checkbox').check();
+  await studio.getByRole('button',{name:'确认文案',exact:true}).click();
+  await expect(studio.getByRole('heading',{name:/文案 · 当前版本 · 已确认/})).toBeVisible();
+  // A stale form may not overwrite server changes; preserve all local input on conflict.
+  await panel.getByLabel('任务目标受众').fill('保留的本窗口修改');
+  await reviewed.check();await panel.getByRole('button',{name:'保存任务资料',exact:true}).click();
+  await expect(panel.getByRole('alert')).toContainText('任务已有新版本');
+  await expect(panel.getByLabel('任务目标受众')).toHaveValue('保留的本窗口修改');
+  await panel.getByRole('button',{name:'读取最新版本并保留输入'}).click();
+  await expect(panel.getByRole('status')).toContainText('已读取最新版本号');
+  await reviewed.check();await panel.getByRole('button',{name:'保存任务资料',exact:true}).click();
+  await expect(panel.getByRole('status')).toContainText('任务资料已保存');
+  await panel.getByRole('button',{name:'查看资料修改历史'}).click();
+  await expect(panel.getByRole('region',{name:'资料修改历史'})).toContainText('初始资料');
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
+  await panel.screenshot({path:'../data/browser-qa/b02-task-context-mobile.png'});
+  await panel.getByRole('button',{name:'移除实测记录 1'}).click();
+  await reviewed.check();await panel.getByRole('button',{name:'保存任务资料',exact:true}).click();
+  await expect(panel.getByRole('status')).toContainText('任务资料已保存');
+  expect((await get(`/tasks/${task.id}/context`)).current.creator_tests).toHaveLength(0);
+});

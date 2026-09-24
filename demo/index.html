@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="体验 AI-Hexing：从 GitHub 工具资料到短视频口播与发布素材。无需登录或 API Key。"
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>AI-Hexing · 在线体验</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">跳到主要内容</a>
+    <header>
+      <a class="brand" href="./"><span class="mark">H</span>AI-Hexing</a
+      ><span class="badge">交互演示 · 无需密钥</span
+      ><a
+        class="repo"
+        href="https://github.com/hexing-ai/AI-Hexing"
+        target="_blank"
+        rel="noopener noreferrer"
+        >GitHub ↗</a
+      >
+    </header>
+    <main id="main">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">为分享 AI 工具的创作者而做</p>
+          <h1>发现一个工具。<br />写成下一条内容<span>。</span></h1>
+          <p class="lead">
+            把 GitHub 资料、口播和配套文案放在同一张工作台。<br />先读懂工具，再决定怎么讲。
+          </p>
+          <a class="primary button" href="#workbench">开始体验 ↓</a
+          ><a
+            class="button"
+            href="https://github.com/hexing-ai/AI-Hexing#快速运行"
+            >运行完整本地版 ↗</a
+          >
+        </div>
+        <aside class="story" aria-label="创作流程">
+          <span class="eyebrow">一条内容的四个片段</span>
+          <div><b>痛点</b><span>从观众的具体需求开始</span></div>
+          <div><b>栏目句</b><span>保留你的表达习惯</span></div>
+          <div><b>核心亮点</b><span>选一个有依据的特点</span></div>
+          <div><b>使用示例</b><span>把操作与必要条件讲清楚</span></div>
+        </aside>
+      </section>
+      <section id="workbench" class="workbench">
+        <div class="toolbar">
+          <nav aria-label="演示页面">
+            <button data-view="discover" aria-pressed="true">发现工具</button
+            ><button data-view="create" aria-pressed="false">创作任务</button
+            ><button data-view="bots" aria-pressed="false">工具封神榜</button>
+          </nav>
+          <span class="muted">本页不调用模型</span>
+        </div>
+        <div class="notice">
+          这是使用预置资料的交互演示。示例口播按固定规则组合，可编辑、复制和下载；真实生成、本人声音克隆及完整素材包导出请使用本地版。
+        </div>
+        <section id="discover" class="view">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">先找到值得讲的工具</p>
+              <h2>同一个主题，三个不同方向。</h2>
+            </div>
+            <span class="tag">资料快照 · AI 健身</span>
+          </div>
+          <p class="muted">
+            查看四项介绍，勾选比较，再选择一个工具进入示例创作。来源为已保存的项目说明，未经产品实测，当前情况以
+            GitHub 为准。
+          </p>
+          <div id="cards" class="cards"></div>
+          <section id="comparison" hidden aria-label="工具比较">
+            <h3>已选工具比较</h3>
+            <div class="table-scroll" tabindex="0">
+              <table id="compare-table"></table>
+            </div>
+          </section>
+        </section>
+        <section id="create" class="view" hidden>
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">从事实到表达</p>
+              <h2 id="script-title">先选一个工具</h2>
+            </div>
+            <button id="back">← 返回选工具</button>
+          </div>
+          <div id="empty">
+            <p>从“发现工具”选择一个项目，即可查看四段示例口播并编辑。</p>
+          </div>
+          <div id="editor" hidden>
+            <p class="muted">
+              以下是预置示例的规则组合，不是实时 AI
+              生成。修改只保留在当前页面，刷新会重置。
+            </p>
+            <div class="editor-layout">
+              <div id="script-fields"></div>
+              <aside class="output">
+                <h3>配套发布文案</h3>
+                <label for="copy">文案正文</label
+                ><textarea id="copy" rows="9"></textarea>
+                <p>
+                  编辑口播后，可点击下方按钮同步文案；它会覆盖当前文案编辑内容。
+                </p>
+                <button id="sync">按当前口播更新文案</button>
+                <hr />
+                <h3>接下来，配上你的声音</h3>
+                <p>
+                  完整本地版支持本人音色、试听确认和 30–35
+                  秒配音校验。此演示不收集录音。
+                </p>
+                <a href="https://github.com/hexing-ai/AI-Hexing#快速运行"
+                  >查看本地使用方式 ↗</a
+                >
+              </aside>
+            </div>
+            <div class="actions">
+              <button id="copy-script" class="primary">复制口播</button
+              ><button id="download">下载示例文本</button
+              ><span id="count" class="muted"></span>
+            </div>
+          </div>
+        </section>
+        <section id="bots" class="view" hidden>
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">AI-Hexing COLLECTION</p>
+              <h2>让工具有一张熟悉的面孔。</h2>
+            </div>
+            <button id="motion" aria-pressed="false">暂停漂浮</button>
+          </div>
+          <p class="muted">
+            24 个精选工具，点击 Bot 查看介绍与 GitHub
+            链接。演示为轻量动画，完整工作台另有拖拽与表情交互。
+          </p>
+          <div class="bot-grid" id="bot-grid"></div>
+        </section>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </section>
+      <section class="closing">
+        <h2>从演示，走到你自己的创作流程。</h2>
+        <p>本地运行 · 自备 API · 费用确认 · MIT 开源</p>
+        <a class="primary button" href="https://github.com/hexing-ai/AI-Hexing"
+          >查看源码与安装步骤 ↗</a
+        >
+        <p class="muted">
+          如果这个工作台对你有用，欢迎在 GitHub 留下一颗 Star。
+        </p>
+      </section>
+    </main>
+    <footer>
+      AI-Hexing · 本地 MVP ·
+      <a href="third-party/bloub-LICENSE.txt">Bot 许可</a>
+      <span>资料需要核对，表达由你决定。</span>
+    </footer>
+    <dialog id="detail" aria-labelledby="detail-title">
+      <h2 id="detail-title" tabindex="-1"></h2>
+      <p id="detail-description"></p>
+      <h3>产品亮点：</h3>
+      <p id="detail-highlight"></p>
+      <div class="actions">
+        <a
+          id="detail-link"
+          class="button primary"
+          target="_blank"
+          rel="noopener noreferrer"
+          >打开 GitHub ↗</a
+        ><button id="close">关闭</button>
+      </div>
+    </dialog>
+    <noscript
+      >在线交互需要启用 JavaScript。你仍可通过顶部 GitHub
+      链接查看代码和安装步骤。</noscript
+    >
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
