@@ -16,7 +16,7 @@ from starlette.exceptions import HTTPException
 from backend.app import models as m
 from backend.app import schemas as s
 from backend.app.api.window_login import register_window_login
-from backend.app.core.auth import authenticate, login
+from backend.app.core.auth import authenticate, client_address, login
 from backend.app.core.config import get_settings
 from backend.app.core.db import factory, transaction
 from backend.app.core.errors import AppError, error_dict
@@ -151,11 +151,7 @@ def create_app(settings=None, session_factory=None):
             raise AppError("ORIGIN_INVALID", "登录来源不受信任。", 403)
         with transaction(sf) as db:
             creator, token, csrf = login(
-                db,
-                settings,
-                body.login_name,
-                body.password,
-                request.client.host if request.client else "local",
+                db, settings, body.login_name, body.password, client_address(request, settings)
             )
             response = ok(request, {"creator_id": creator.id, "csrf_token": csrf})
             response.set_cookie(

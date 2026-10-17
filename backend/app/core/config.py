@@ -38,6 +38,7 @@ class Settings(BaseSettings):
     job_lease_seconds: int = 180
     job_heartbeat_seconds: int = 15
     session_ttl_seconds: int = 28800
+    trusted_proxy_hosts: list[str] = ["127.0.0.1", "::1", "::ffff:127.0.0.1"]
     cost_single_limit_micros: int = Field(default=1_000_000, ge=0)
     cost_monthly_limit_micros: int = Field(default=30_000_000, ge=0)
     # Hard-coded directory prices stop quoting from 00:00 Asia/Shanghai on these dates until re-verified.

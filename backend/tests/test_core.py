@@ -10,6 +10,7 @@ from pydantic import SecretStr
 from sqlalchemy import func, select
 
 from backend.app import models as m
+from backend.app.core import auth
 from backend.app.core.auth import hasher
 from backend.app.core.db import transaction
 from backend.app.core.errors import AppError, ProviderError
@@ -96,6 +97,61 @@ def test_bad_login_rate_limit_persists(env):
     )
     assert r.status_code == 429
     assert "wrong-password-leak-check" not in r.text
+
+
+def attempt_login(env, name, password, forwarded=None):
+    headers = {"Origin": env.settings.web_origin}
+    if forwarded:
+        headers["X-Forwarded-For"] = forwarded
+    return env.client.post(
+        "/api/v1/auth/login", json={"login_name": name, "password": password}, headers=headers
+    ).status_code
+
+
+def add_creator(env, name, password):
+    with env.sf() as db:
+        db.add(m.Creator(login_name=name, password_hash=hasher.hash(password)))
+        db.commit()
+
+
+def test_locked_account_does_not_lock_other_accounts(env):
+    add_creator(env, "other", "different-test-password")
+    for _ in range(10):
+        assert attempt_login(env, "tester", "wrong-password") == 401
+    assert attempt_login(env, "TESTER ", "wrong-password") == 429
+    assert attempt_login(env, "other", "different-test-password") == 200
+
+
+def test_successful_login_clears_account_failures(env):
+    for _ in range(9):
+        assert attempt_login(env, "tester", "wrong-password") == 401
+    assert attempt_login(env, "tester", "test-password-only") == 200
+    for _ in range(9):
+        assert attempt_login(env, "tester", "wrong-password") == 401
+
+
+def test_client_limit_uses_last_forwarded_hop_from_trusted_proxy(env):
+    env.settings.trusted_proxy_hosts = ["testclient"]
+    add_creator(env, "other", "different-test-password")
+    for i in range(20):
+        assert attempt_login(env, f"guess-{i}", "wrong-password", f"10.0.0.{i}, 203.0.113.7") == 401
+    assert attempt_login(env, "other", "different-test-password", "spoofed, 203.0.113.7") == 429
+    assert attempt_login(env, "other", "different-test-password", "203.0.113.8") == 200
+
+
+def test_forwarded_header_ignored_from_untrusted_peer(env):
+    env.settings.trusted_proxy_hosts = []
+    for i in range(20):
+        assert attempt_login(env, f"guess-{i}", "wrong-password", f"198.51.100.{i}") == 401
+    assert attempt_login(env, "tester", "test-password-only", "198.51.100.99") == 429
+
+
+def test_global_limit_caps_spoofed_clients(env, monkeypatch):
+    monkeypatch.setattr(auth, "GLOBAL_LIMIT", 3)
+    env.settings.trusted_proxy_hosts = ["testclient"]
+    for i in range(3):
+        assert attempt_login(env, f"guess-{i}", "wrong-password", f"192.0.2.{i}") == 401
+    assert attempt_login(env, "tester", "test-password-only", "192.0.2.50") == 429
 
 
 @pytest.mark.parametrize(

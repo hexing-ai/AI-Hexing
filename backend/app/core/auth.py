@@ -13,14 +13,31 @@ from backend.app.services.common import digest
 hasher = PasswordHasher()
 DUMMY_HASH = hasher.hash("constant-dummy-password-never-valid")
 
+ATTEMPT_WINDOW_SECONDS = 600
+ACCOUNT_LIMIT = 10
+CLIENT_LIMIT = 20
+GLOBAL_LIMIT = 200
+GLOBAL_KEY = "global"
 
-def login(db, settings, login_name, password, remote):
-    key = digest(remote)
+
+def client_address(request, settings):
+    peer = request.client.host if request.client else "local"
+    forwarded = request.headers.get("x-forwarded-for", "")
+    if peer in settings.trusted_proxy_hosts and forwarded:
+        # The nearest trusted proxy appends the real peer last; earlier entries are client-supplied.
+        return forwarded.split(",")[-1].strip() or peer
+    return peer
+
+
+def login(db, settings, login_name, password, client):
+    account_key = digest("account:" + login_name.strip().lower())
+    client_key = digest("client:" + client)
     now = time.time()
-    db.execute(delete(LoginAttempt).where(LoginAttempt.created_at < now - 600))
-    count = db.scalar(select(func.count()).select_from(LoginAttempt).where(LoginAttempt.key == key))
-    if count >= 10:
-        raise AppError("LOGIN_RATE_LIMIT", "登录尝试过多，请十分钟后再试。", 429)
+    db.execute(delete(LoginAttempt).where(LoginAttempt.created_at < now - ATTEMPT_WINDOW_SECONDS))
+    for key, limit in ((account_key, ACCOUNT_LIMIT), (client_key, CLIENT_LIMIT), (GLOBAL_KEY, GLOBAL_LIMIT)):
+        count = db.scalar(select(func.count()).select_from(LoginAttempt).where(LoginAttempt.key == key))
+        if count >= limit:
+            raise AppError("LOGIN_RATE_LIMIT", "登录尝试过多，请十分钟后再试。", 429)
     creator = db.scalar(select(Creator).where(Creator.login_name == login_name, Creator.active.is_(True)))
     try:
         hasher.verify(creator.password_hash if creator else DUMMY_HASH, password)
@@ -28,9 +45,10 @@ def login(db, settings, login_name, password, remote):
     except (VerificationError, InvalidHashError):
         valid = False
     if not valid:
-        db.add(LoginAttempt(key=key))
+        db.add_all(LoginAttempt(key=key) for key in (account_key, client_key, GLOBAL_KEY))
         db.commit()  # Preserve rate-limit evidence even though the request fails.
         raise AppError("INVALID_CREDENTIALS", "账户或密码不正确。", 401)
+    db.execute(delete(LoginAttempt).where(LoginAttempt.key == account_key))
     token, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
     row = Session(
         owner_id=creator.id,
