@@ -18,6 +18,10 @@ class LoginIn(Strict):
     password: str = Field(min_length=1, max_length=256)
 
 
+class InviteIn(Strict):
+    code: str = Field(min_length=1, max_length=40)
+
+
 class ImportIn(Strict):
     repository_url: str = Field(max_length=1000)
 

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import ConfirmDialog from './ConfirmDialog';
 import {useSessionValue} from '../lib/useSessionValue';
 import {usePolling} from '../lib/usePolling';
+import {useGuest} from '../lib/guest';
 import JobProgress, {jobPending, type JobDetail} from './JobProgress';
 import { api, ApiError, type Receipt, type Task, type List } from '../lib/api';
 import ManuscriptPreview from './ManuscriptPreview';
@@ -29,12 +30,13 @@ async function readAttention(path:string):Promise<List<JobDetail>> {
 
 export default function TextStudio({taskId, authorize,focusGroupId,focusRequest=0}:{taskId:string;focusGroupId?:string;focusRequest?:number;authorize:(action:string,input:Record<string,unknown>)=>Promise<string|undefined>}) {
   const {data,error:readError,refresh}=usePolling<Data>(`/tasks/${taskId}/texts`,2500);
-  const {data:activeJobs,error:jobsError}=usePolling<List<JobDetail>>(`/jobs?task_id=${taskId}&bucket=attention&limit=50`,3000,readAttention);
+  const guest=useGuest();
+  const {data:activeJobs,error:jobsError}=usePolling<List<JobDetail>>(guest?null:`/jobs?task_id=${taskId}&bucket=attention&limit=50`,3000,readAttention);
   const [uncertainValue,setUncertainValue]=useSessionValue('hexing-generation-unknown-'+taskId);
   const uncertain=useMemo(()=>{try{return uncertainValue?JSON.parse(uncertainValue) as string[]:null;}catch{return null;}},[uncertainValue]);
   function setUncertain(value:string[]|null){setUncertainValue(value===null?null:JSON.stringify(value));}
   const recentJob=data?.groups[0]?.job_id;
-  const {data:latestJob}=usePolling<JobDetail>(recentJob?'/jobs/'+recentJob:null,3000);
+  const {data:latestJob}=usePolling<JobDetail>(recentJob&&!guest?'/jobs/'+recentJob:null,3000);
   const generationBusy=(!!recentJob&&jobPending(latestJob?.status))||!activeJobs||!!jobsError||activeJobs.items.some(j=>j.kind==='generation'&&jobPending(j.status))||!!uncertain;
   useEffect(()=>{if(uncertain&&data?.groups.some(g=>!uncertain.includes(g.job_id)))setUncertainValue(null);},[data,uncertain,setUncertainValue]);
   const [tabSelection,setTabSelection]=useState<{kind:'script'|'copy';focusKey:string}>({kind:'script',focusKey:''});
@@ -137,7 +139,7 @@ export default function TextStudio({taskId, authorize,focusGroupId,focusRequest=
     {readError&&<p className="error" role="alert">暂时无法更新稿件，已显示的内容保留。{readError}<button onClick={()=>void refresh().catch(()=>{})}>重新读取稿件</button></p>}{status&&<p role="status">{status}</p>}{error&&<p role="alert" className="error">{error}</p>}
     {jobsError&&<p className="error" role="alert">无法核对生成状态，暂缓新生成。{jobsError}</p>}
     {uncertain&&<section className="mode-note"><h3>提交结果待核对</h3><p>正在核对这次提交，服务端可能已受理。系统会继续读取记录，不会自动重新生成。</p><Link href="/activity">先查看处理记录 →</Link><button disabled={busy||!activeJobs||!!jobsError||activeJobs.items.some(j=>j.kind==='generation'&&jobPending(j.status))} onClick={()=>{sessionStorage.removeItem('hexing-generation-unknown-'+taskId);setUncertain(null);setStatus('已结束本次提交核对。重新生成仍需单独确认费用。');}}>已核对未创建新记录，解除提交锁定</button></section>}
-    {recentJob&&<details className="generation-progress" open={!!latestJob&&jobPending(latestJob.status)}><summary>最近一次生成 · {latestJob?.status_label||'读取进度中'}</summary><JobProgress jobId={recentJob}/></details>}
+    {recentJob&&!guest&&<details className="generation-progress" open={!!latestJob&&jobPending(latestJob.status)}><summary>最近一次生成 · {latestJob?.status_label||'读取进度中'}</summary><JobProgress jobId={recentJob}/></details>}
     {data.groups[0]&&data.versions.some(v=>v.generation_id===data.groups[0].id&&!currentIds.includes(v.id))&&<div className="candidate-ready"><p>最近一次候选已留存。对照来源后，选择要采用的口播与文案。</p><Link className="button" href={`/tasks/${taskId}/generations/${data.groups[0].id}`}>查看本次候选 →</Link></div>}
     {draft&&<div className="muted-box draft-editor" hidden={draft.kind!==tab}><h3>{draft.kind==='script'?'口播编辑':'文案编辑'}</h3>{(draft.kind==='script'?['pain','intro','feature','example']:['body','title','tags']).map(key=><label key={key}>{names[key]}<textarea aria-label={names[key]} value={Array.isArray(draft.content[key])?(draft.content[key] as string[]).join(', '):String(draft.content[key]??'')} readOnly={key==='intro'} onChange={e=>update(key,e.target.value)}/></label>)}
       <details><summary>来源引用</summary><textarea aria-label="来源引用 JSON" value={draft.evidence} onChange={e=>{remember({...draft,evidence:e.target.value});editCounter.current++;setDirty(true);setNeedsSave(true);}}/></details>

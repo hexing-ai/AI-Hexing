@@ -32,20 +32,23 @@ export function WorkspaceIcon({name}:{name:string}) {
   return <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]||paths.file}</svg>;
 }
 
-export default function WorkspaceFrame({page,mode,onLogout,children}:{page:string;mode?:string;onLogout:()=>void;children:ReactNode}) {
+export const guestPages=['discover','tasks','ranking'];
+
+export default function WorkspaceFrame({page,mode,guest=false,onLogout,children}:{page:string;mode?:string;guest?:boolean;onLogout:()=>void;children:ReactNode}) {
+  const visible=guest?navigation.filter(item=>guestPages.includes(item.href.slice(1))):navigation;
   const menu=useRef<HTMLDialogElement>(null);
   useEffect(()=>{const media=matchMedia('(min-width: 851px)');const closeOnDesktop=()=>{if(media.matches)menu.current?.close();};media.addEventListener('change',closeOnDesktop);return()=>media.removeEventListener('change',closeOnDesktop);},[]);
   const close=()=>menu.current?.close();
   const title=[...navigation,...utilities].find(item=>item.href==='/'+page)?.label||'创作工作台';
   const links=(items:readonly {href:string;label:string;icon:string}[])=>items.map(item=><Link key={item.href} href={item.href} className={item.href==='/'+page?'active':''} aria-current={item.href==='/'+page?'page':undefined} onClick={close}><WorkspaceIcon name={item.icon}/>{item.label}</Link>);
   const brand=<Link href="/discover" className="workspace-brand" onClick={close}><span className="brand-symbol" aria-hidden="true">H</span>AI-Hexing</Link>;
-  const sidebar=<>{brand}<span className="nav-caption">创作空间</span><nav aria-label="工作台导航">{links(navigation)}</nav><div className="workspace-utilities"><nav aria-label="辅助导航">{links(utilities)}</nav><div className="workspace-account"><span className="account-avatar" aria-hidden="true">H</span><span>我的工作台</span><button className="text-button" onClick={onLogout}>退出</button></div></div></>;
+  const sidebar=<>{brand}<span className="nav-caption">创作空间</span><nav aria-label="工作台导航">{links(visible)}</nav><div className="workspace-utilities">{!guest&&<nav aria-label="辅助导航">{links(utilities)}</nav>}<div className="workspace-account"><span className="account-avatar" aria-hidden="true">H</span><span>{guest?'访客 · 只读':'我的工作台'}</span><button className="text-button" onClick={onLogout}>退出</button></div></div></>;
   return <DialogFocusProvider><div className="shell hexing-workspace">
     <a className="skip-link" href="#workspace-main">跳到主要内容</a>
     <aside className="sidebar desktop-sidebar">{sidebar}</aside>
     <dialog className="mobile-navigation" ref={menu} aria-label="工作台菜单" onKeyDown={e=>{if(e.key!=='Tab')return;const nodes=Array.from(e.currentTarget.querySelectorAll<HTMLElement>('a[href],button:not(:disabled)'));e.preventDefault();const i=nodes.indexOf(document.activeElement as HTMLElement);nodes[(i+(e.shiftKey?-1:1)+nodes.length)%nodes.length]?.focus();}} onClick={e=>{if(e.target===e.currentTarget)close();}}><div className="mobile-navigation-inner"><button className="menu-close" onClick={close} aria-label="关闭导航">×</button>{sidebar}</div></dialog>
     <main className="workspace" id="workspace-main" tabIndex={-1}>
-      <header className="topbar"><div className="topbar-location"><button className="mobile-menu-button" onClick={()=>menu.current?.showModal()} aria-label="打开导航">☰</button><span>{title}</span>{page==='tasks'&&<span className="breadcrumb-tail">/ 创作工作台</span>}</div><div className="topbar-actions"><span className={`mode ${mode==='mock'?'mock':''}`}><span className="mode-dot"/>{mode==='mock'?'模拟模式':'真实服务'}</span><details className="connection-menu"><summary>窗口连接</summary><WindowLogin loggedIn/></details></div></header>
+      <header className="topbar"><div className="topbar-location"><button className="mobile-menu-button" onClick={()=>menu.current?.showModal()} aria-label="打开导航">☰</button><span>{title}</span>{page==='tasks'&&<span className="breadcrumb-tail">/ 创作工作台</span>}</div><div className="topbar-actions"><span className={`mode ${mode==='mock'?'mock':''}`}><span className="mode-dot"/>{mode==='mock'?'模拟模式':'真实服务'}</span>{!guest&&<details className="connection-menu"><summary>窗口连接</summary><WindowLogin loggedIn/></details>}</div></header>
       <div className={`content workspace-page-${page}`}>{children}</div>
     </main>
   </div></DialogFocusProvider>;

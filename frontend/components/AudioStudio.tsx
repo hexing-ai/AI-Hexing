@@ -3,6 +3,7 @@ import Link from 'next/link';
 import {voiceLabel} from '../lib/voiceName';
 import { useEffect, useRef, useState } from 'react';
 import {usePolling} from '../lib/usePolling';
+import {useGuest} from '../lib/guest';
 import {useSessionValue} from '../lib/useSessionValue';
 import MediaAudio from './MediaAudio';
 import DownloadButton from './DownloadButton';
@@ -16,6 +17,7 @@ type Data={task:Task&{current_script:Text|null;current_copy:Text|null;data_mode:
 type Preview={original_text:string;synthesis_text:string;tool_name:string;voice_revision:number};
 
 export default function AudioStudio({taskId,authorize,focusId,focusType,focusRequest=0}:{taskId:string;authorize:(action:string,input:Record<string,unknown>)=>Promise<string|undefined>;focusId?:string;focusType?:string;focusRequest?:number}){
+  const guest=useGuest();
   const {data,error:readError,refresh}=usePolling<Data>(`/tasks/${taskId}/audio`,3000);
   const [operation,setOperation]=useSessionValue('hexing-audio-operation-'+taskId);
   const [baseline,setBaseline]=useSessionValue('hexing-audio-baseline-'+taskId);
@@ -62,7 +64,7 @@ export default function AudioStudio({taskId,authorize,focusId,focusType,focusReq
   const featured=data.materials.audio||data.versions[0];
   const history=data.versions.filter(v=>v.id!==featured?.id);
   const currentPackage=data.exports.find(e=>e.complete&&e.available&&e.task_revision===data.task.revision&&e.download_path);
-  return <section id="voice-creation" className="panel audio-studio"><div className="panel-heading"><div><h2>配音与素材导出</h2></div><Link href="/voices">管理音色 ↗</Link></div>
+  return <section id="voice-creation" className="panel audio-studio"><div className="panel-heading"><div><h2>配音与素材导出</h2></div>{!guest&&<Link href="/voices">管理音色 ↗</Link>}</div>
     {readError&&<p className="error" role="alert">配音暂时无法更新，已有结果保留。{readError}<button onClick={()=>void refresh().catch(()=>{})}>重新读取配音</button></p>}
     {operation==='unknown'?<div className="mode-note"><p>合成提交结果待核对，请先查看原处理记录。不会自动重新合成。</p><Link href="/activity">核对原记录 →</Link><button disabled={busy||data.versions.some(v=>jobPending(v.job_status))} onClick={()=>setOperation(null)}>已核对原记录，解除提交锁定</button></div>:operation&&<details className="audio-operation" open={jobPending(operationJob?.status)}><summary>本次配音 · {operationJob?.status_label||'正在读取'}</summary><JobProgress jobId={operation}/></details>}
     {notice&&<p role="status" className="notice">{notice}</p>}{error&&<p role="alert" className="error">{error}</p>}

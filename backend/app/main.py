@@ -16,7 +16,7 @@ from starlette.exceptions import HTTPException
 from backend.app import models as m
 from backend.app import schemas as s
 from backend.app.api.window_login import register_window_login
-from backend.app.core.auth import authenticate, client_address, login
+from backend.app.core.auth import authenticate, client_address, invite_login, login
 from backend.app.core.config import get_settings
 from backend.app.core.db import factory, transaction
 from backend.app.core.errors import AppError, error_dict
@@ -145,6 +145,20 @@ def create_app(settings=None, session_factory=None):
             pass
         return app.openapi()
 
+    def signed_in(request, creator, token, csrf, role, max_age):
+        response = ok(request, {"creator_id": creator.id, "csrf_token": csrf, "role": role})
+        for name, value in (("hexing_session", token), ("hexing_csrf", csrf)):
+            response.set_cookie(
+                name,
+                value,
+                httponly=True,
+                secure=settings.app_env == "production",
+                samesite="strict",
+                max_age=max(1, int(max_age)),
+                path="/",
+            )
+        return response
+
     @app.post("/api/v1/auth/login")
     def sign_in(request: Request, body: s.LoginIn):
         if request.headers.get("origin") != settings.web_origin:
@@ -153,26 +167,16 @@ def create_app(settings=None, session_factory=None):
             creator, token, csrf = login(
                 db, settings, body.login_name, body.password, client_address(request, settings)
             )
-            response = ok(request, {"creator_id": creator.id, "csrf_token": csrf})
-            response.set_cookie(
-                "hexing_session",
-                token,
-                httponly=True,
-                secure=settings.app_env == "production",
-                samesite="strict",
-                max_age=settings.session_ttl_seconds,
-                path="/",
-            )
-            response.set_cookie(
-                "hexing_csrf",
-                csrf,
-                httponly=True,
-                secure=settings.app_env == "production",
-                samesite="strict",
-                max_age=settings.session_ttl_seconds,
-                path="/",
-            )
-            return response
+            return signed_in(request, creator, token, csrf, "owner", settings.session_ttl_seconds)
+
+    @app.post("/api/v1/auth/invite")
+    def invite_sign_in(request: Request, body: s.InviteIn):
+        if request.headers.get("origin") != settings.web_origin:
+            raise AppError("ORIGIN_INVALID", "登录来源不受信任。", 403)
+        with transaction(sf) as db:
+            creator, token, csrf = invite_login(db, settings, body.code, client_address(request, settings))
+            session = db.scalar(select(m.Session).where(m.Session.token_hash == digest(token)))
+            return signed_in(request, creator, token, csrf, "guest", session.expires_at - time.time())
 
     @app.get("/api/v1/auth/me")
     def me(request: Request):
@@ -180,12 +184,12 @@ def create_app(settings=None, session_factory=None):
             csrf = request.cookies.get("hexing_csrf", "")
             if digest(csrf) != session.csrf_hash:
                 raise AppError("SESSION_INVALID", "请重新登录以恢复会话。", 401)
-            return ok(request, {"creator_id": owner, "csrf_token": csrf})
+            return ok(request, {"creator_id": owner, "csrf_token": csrf, "role": session.role})
 
     @app.post("/api/v1/auth/logout")
     def logout(request: Request):
         with transaction(sf) as db:
-            _, session = authenticate(db, request, settings, write=True)
+            _, session = authenticate(db, request, settings, write=True, guest_write=True)
             session.revoked = True
         r = Response(status_code=204)
         r.delete_cookie("hexing_session")
@@ -194,7 +198,17 @@ def create_app(settings=None, session_factory=None):
 
     @app.get("/api/v1/capabilities")
     def capabilities(request: Request):
-        with read(request):
+        with read(request) as (_, _owner, session):
+            if session.role == "guest":
+                return ok(
+                    request,
+                    {
+                        "mode": settings.provider_mode,
+                        "contracts": [],
+                        "validation_tools_enabled": False,
+                        "contract_version": "S1-2026-09-08",
+                    },
+                )
             p = Providers(settings)
             return ok(
                 request,
@@ -615,10 +629,15 @@ def create_app(settings=None, session_factory=None):
 
         return mutate(request, body.model_dump(), run)
 
+    def guest_asset(a, session):
+        if session.role == "guest" and a.kind != "formal_audio":
+            raise AppError("GUEST_FORBIDDEN", "访客模式不能查看这部分内容。", 403)
+        return a
+
     @app.get("/api/v1/assets/{id}/content")
     def download(id: str, request: Request):
-        with read(request) as (db, owner, _):
-            a = owned(db, m.Asset, id, owner, settings.provider_mode)
+        with read(request) as (db, owner, session):
+            a = guest_asset(owned(db, m.Asset, id, owner, settings.provider_mode), session)
             p = asset_path(settings, a.storage_key)
             if a.state != "ready" or not p.is_file():
                 raise AppError("ASSET_UNAVAILABLE", "文件不存在或正在清理。", 404)
@@ -643,8 +662,9 @@ def create_app(settings=None, session_factory=None):
 
     @app.get("/api/v1/assets/{id}")
     def asset_metadata(id: str, request: Request):
-        with read(request) as (db, owner, _):
-            return ok(request, asset_view(owned(db, m.Asset, id, owner, settings.provider_mode)))
+        with read(request) as (db, owner, session):
+            a = guest_asset(owned(db, m.Asset, id, owner, settings.provider_mode), session)
+            return ok(request, asset_view(a))
 
     @app.delete("/api/v1/assets/{id}")
     def delete_asset(id: str, request: Request, body: s.DeleteIn):

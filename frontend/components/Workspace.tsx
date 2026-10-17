@@ -14,7 +14,9 @@ import DiscoveryWorkspace from './DiscoveryWorkspace';
 import ProcessingRecords, { type ResultAction } from './ProcessingRecords';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { api, ApiError, setCsrf, type Asset, type Capabilities, type Job, type List, type Receipt, type Run, type Task, type Voice } from '../lib/api';
+import { GuestContext } from '../lib/guest';
+import { guestPages } from './WorkspaceFrame';
+import { api, ApiError, setCsrf, setGuest, type Asset, type Capabilities, type Job, type List, type Receipt, type Run, type Task, type Voice } from '../lib/api';
 
 const labels: Record<string,string> = {generation:'正式文本生成',discovery_search:'GitHub 主题搜索',discovery_score:'候选评分',discovery_brief:'工具中文介绍',queued:'排队中',running:'处理中',succeeded:'已完成',failed:'失败',needs_reconciliation:'结果待核对',cancelled:'已取消',cloning:'克隆中',awaiting_preview:'待试听',ready:'可用',disabled:'已停用',deletion_pending:'删除中',remote_deletion_pending:'远端删除待确认',deleted:'已删除',passed:'结构检查通过',blocked:'待完成',not_run:'尚未运行',analysis:'资料分析',import:'仓库导入',writing:'口播与文案',voice_enrollment:'声音复刻',voice_preview:'短句试听',voice_reuse:'音色复用',voice_delete:'删除音色'};
 
@@ -30,6 +32,8 @@ export default function Workspace() {
   const [error, setError] = useState(''); const [notice,setNotice] = useState('');
   const [busy,setBusy] = useState(false); const busyRef = useRef(false);
   const [name,setName] = useState(''); const [password,setPassword] = useState('');
+  const [guest,setGuestState] = useState(false); const [inviteCode,setInviteCode] = useState('');
+  const blocked=guest&&!guestPages.includes(page);
   const [tasks,setTasks] = useState<Task[]>([]);
   const [tasksLoaded,setTasksLoaded]=useState(false);
   const [tasksError,setTasksError]=useState('');
@@ -64,7 +68,7 @@ export default function Workspace() {
   useEffect(()=>()=>{reading.current=null;},[page,routeTaskId,auth]);
 
   const refresh = useCallback(async () => {
-    if(page!=='tasks'&&page!=='validation')return;
+    if(page!=='tasks'&&(page!=='validation'||guest))return;
     const scope=page+':'+(routeTaskId||'');
     if(reading.current?.scope===scope&&reading.current.promise)return reading.current.promise;
     const request={scope,promise:null as Promise<void>|null};reading.current=request;
@@ -89,20 +93,20 @@ export default function Workspace() {
       }
     })().finally(()=>{if(reading.current===request)reading.current=null;});
     return request.promise;
-  },[page,routeTaskId]);
+  },[page,routeTaskId,guest]);
 
   useEffect(()=>{
-    const expired=()=>{setCsrf('');setAuth('out');setError('登录已过期，请重新登录后继续当前页面。');pendingCost.current?.(false);};
+    const expired=()=>{setCsrf('');setGuest(false);setGuestState(false);setAuth('out');setError('登录已过期，请重新登录后继续当前页面。');pendingCost.current?.(false);};
     window.addEventListener('hexing-session-expired',expired);
     return()=>window.removeEventListener('hexing-session-expired',expired);
   },[]);
   useEffect(()=>{
     let disposed=false;
     void (async()=>{
-      const me=await api<{csrf_token:string}>('/auth/me');
+      const me=await api<{csrf_token:string;role:'owner'|'guest'}>('/auth/me');
       const c=await api<Capabilities>('/capabilities');
       if(disposed)return;
-      setCsrf(me.csrf_token);setCaps(c);setAuth('in');setError('');
+      setCsrf(me.csrf_token);setGuest(me.role==='guest');setGuestState(me.role==='guest');setCaps(c);setAuth('in');setError('');
       setSelectedTask(sessionStorage.getItem('hexing-selected-task')||'');setSelectedVoice(sessionStorage.getItem('hexing-selected-voice')||'');
     })().catch(e=>{if(!disposed){if(e instanceof ApiError&&e.status===401){setCsrf('');setAuth('out');}else{setAuth('error');setError((e as Error).message);}}});
     return()=>{disposed=true;};
@@ -230,10 +234,11 @@ export default function Workspace() {
 
   if(auth==='error')return <main className="recovery-screen"><section><span className="brand">AI-Hexing</span><h1>暂时无法恢复工作台</h1><p role="alert">{error}</p><p>连接恢复后，可继续查看原来的页面。</p><button onClick={()=>{setAuth('loading');setAuthAttempt(n=>n+1);}}>重新连接工作台</button></section></main>;
   if(auth==='loading')return <main className="center"><div className="brand">AI-Hexing</div><p role="status">正在恢复工作台…</p></main>;
-  if(auth==='out')return <main className="login-screen"><section className="login-story"><div className="brand">AI-Hexing<span>创作工作台</span></div><div><span className="eyebrow">从资料到表达</span><h1>让值得分享的工具，<br/>成为下一条内容。</h1><p>先核对事实，再整理口播。<br/>每一次确认，都留下可靠的依据。</p></div><small>资料 · 创作 · 声音 · 素材</small></section><section className="login-form"><form onSubmit={e=>{e.preventDefault();void act(async()=>{const me=await api<{csrf_token:string}>('/auth/login',{login_name:name,password});setCsrf(me.csrf_token);setPassword('');setAuth('loading');setAuthAttempt(n=>n+1);});}}><span className="eyebrow">私有空间</span><h2>登录工作台</h2><p>使用本机创建的创作者账户。</p><label>账户<input autoComplete="username" required value={name} onChange={e=>setName(e.target.value)}/></label><label>密码<input type="password" autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)}/></label><button disabled={busy} className="primary">{busy?'登录中…':'进入工作台 →'}</button>{error&&<p className="error" role="alert">{error}</p>}<details><summary>首次使用</summary><p>在项目终端运行账户初始化命令，再返回此处登录。</p><code>.venv/bin/python -m backend.app.cli create-owner</code></details><WindowLogin loggedIn={false}/></form></section></main>;
+  if(auth==='out')return <main className="login-screen"><section className="login-story"><div className="brand">AI-Hexing<span>创作工作台</span></div><div><span className="eyebrow">从资料到表达</span><h1>让值得分享的工具，<br/>成为下一条内容。</h1><p>先核对事实，再整理口播。<br/>每一次确认，都留下可靠的依据。</p></div><small>资料 · 创作 · 声音 · 素材</small></section><section className="login-form"><form onSubmit={e=>{e.preventDefault();void act(async()=>{const me=await api<{csrf_token:string}>('/auth/login',{login_name:name,password});setCsrf(me.csrf_token);setPassword('');setAuth('loading');setAuthAttempt(n=>n+1);});}}><span className="eyebrow">私有空间</span><h2>登录工作台</h2><p>使用本机创建的创作者账户。</p><label>账户<input autoComplete="username" required value={name} onChange={e=>setName(e.target.value)}/></label><label>密码<input type="password" autoComplete="current-password" required value={password} onChange={e=>setPassword(e.target.value)}/></label><button disabled={busy} className="primary">{busy?'登录中…':'进入工作台 →'}</button>{error&&<p className="error" role="alert">{error}</p>}<details><summary>首次使用</summary><p>在项目终端运行账户初始化命令，再返回此处登录。</p><code>.venv/bin/python -m backend.app.cli create-owner</code></details><WindowLogin loggedIn={false}/></form><form className="invite-form" onSubmit={e=>{e.preventDefault();void act(async()=>{const me=await api<{csrf_token:string}>('/auth/invite',{code:inviteCode});setCsrf(me.csrf_token);setInviteCode('');setAuth('loading');setAuthAttempt(n=>n+1);});}}><h2>用邀请码访问</h2><p>收到邀请码的访客可以只读浏览工作台，不能修改、生成或使用声音功能。</p><label>邀请码<input autoComplete="off" required placeholder="XXXX-XXXX-XXXX-XXXX" value={inviteCode} onChange={e=>setInviteCode(e.target.value)}/></label><button disabled={busy}>以访客身份进入 →</button></form></section></main>;
 
-  return <WorkspaceFrame page={page} mode={caps?.mode} onLogout={()=>void act(async()=>{await api('/auth/logout',{});setAuth('out');sessionStorage.clear();})}>{caps?.mode==='mock'&&<div className="mode-note">模拟数据，仅用于工程验证。声音实验播放测试音，不代表本人克隆音效果。</div>}{error&&<div className="error" role="alert">{error}</div>}{notice&&<div className="notice" role="status">{notice}</div>}{tasksError&&page!=='tasks'&&<div className="error" role="alert">{tasksError}</div>}
+  return <GuestContext.Provider value={guest}><WorkspaceFrame page={page} mode={caps?.mode} guest={guest} onLogout={()=>void act(async()=>{await api('/auth/logout',{});setGuest(false);setGuestState(false);setAuth('out');sessionStorage.clear();})}>{guest&&<div className="mode-note" role="note">访客只读模式：可以浏览工具、稿件、配音和榜单；修改、生成和声音功能仅限工作台主人使用。</div>}{caps?.mode==='mock'&&<div className="mode-note">模拟数据，仅用于工程验证。声音实验播放测试音，不代表本人克隆音效果。</div>}{error&&<div className="error" role="alert">{error}</div>}{notice&&<div className="notice" role="status">{notice}</div>}{tasksError&&page!=='tasks'&&<div className="error" role="alert">{tasksError}</div>}
 
+  {blocked?<section className="panel"><h1>访客模式不能查看这一页</h1><p>声音、费用、处理记录和接入设置仅限工作台主人查看。</p><Link className="button" href="/discover">返回发现工具 →</Link></section>:<>
   {page==='costs'&&<CostRecords key={path} jobId={path.split('/')[2]}/>}
   {page==='voices'&&(path.split('/')[2]?<VoiceSetup key={path} voiceId={path.split('/')[2]==='new'?undefined:path.split('/')[2]} caps={caps} authorize={authorize}/>:<VoiceLibrary/>)}
   {page==='ranking'&&<RankingManager key={path} entryId={path.split('/')[2]}/>}
@@ -247,7 +252,8 @@ export default function Workspace() {
   <section className="results"><h2>实验结果</h2>{runs.length===0?<p className="muted-box">完成一次实验后，结果会保存在这里。</p>:runs.map(r=><article className="panel" key={r.id}><div className="panel-heading"><h3>{labels[r.kind]||r.kind}</h3><Badge value={r.status}/></div><small>{r.mode==='mock'?'模拟验证':'真实调用'} · {r.id.slice(0,8)}</small>{r.output?.content?.script&&<div className="script-block">{Object.entries(r.output.content.script).map(([k,v])=><p key={k}><span>{({pain:'痛点',intro:'栏目句',feature:'亮点',example:'示例'} as Record<string,string>)[k]}</span>{v}</p>)}</div>}{r.output?.content?.copy&&<div className="muted-box"><strong>发布文案</strong><p>{r.output.content.copy.body}</p><small>{r.output.content.copy.tags.map(t=>'#'+t).join(' ')}</small></div>}{r.output?.checks&&<p className="muted">结构检查：{Object.entries(r.output.checks).map(([k,v])=>`${({script:'口播',copy:'文案',evidence:'证据'} as Record<string,string>)[k]||k} ${v?'通过':'未通过'}`).join(' · ')}。事实与自然度仍需人工检查。</p>}{r.output?.issues&&<ul>{r.output.issues.map((issue,i)=><li key={i}>{issue.severity==='warning'?'待复核':'需修正'} · {issue.path}：{issue.message}</li>)}</ul>}{r.kind==='writing'&&<details><summary>查看原始返回（含未通过字段）</summary><pre>{r.output?.raw_text ?? '此历史结果未保存完整原文，无法恢复已丢弃字段。'}</pre></details>}{r.output?.asset_id&&<div className="audio-result">{r.output.is_test_tone&&<p>这是一段模拟测试音，不是真实克隆配音。</p>}<audio controls preload="none" src={`/api/v1/assets/${r.output.asset_id}/content`}/><a href={`/api/v1/assets/${r.output.asset_id}/content`} download>下载音频 ↗</a><small>实际时长 {((r.output.duration_ms||0)/1000).toFixed(3)} 秒</small></div>}</article>)}</section></>}
 
   {page==='activity'&&<div className="page-title"><div><span className="eyebrow">结果与问题都可追溯</span><h1>处理记录</h1><p>查看各次处理的结果、失败原因与用量。打开记录不会重新调用模型。</p></div><Link href="/tasks">返回创作任务 →</Link></div>}
-  {page==='tasks'?routeTaskId&&<details id="task-processing" className="panel task-processing"><summary>处理记录 · 查看结果与问题</summary><ProcessingRecords key={'task:'+routeTaskId} taskId={routeTaskId} onOpenResult={openProcessingResult}/></details>:page!=='voices'&&page!=='costs'&&page!=='ranking'&&<ProcessingRecords key={page} area={page==='discover'?'discover':page==='validation'?'validation':undefined} full={page==='activity'} onOpenResult={openProcessingResult}/>}
-  {caps?.mode==='live'&&page!=='ranking'&&<CostBudget/>}
-  {costPrompt&&<dialog ref={costDialog} className="cost-dialog" aria-labelledby="cost-title" onCancel={e=>{e.preventDefault();resolveCost(false);}} onKeyDown={e=>{if(e.key!=='Tab')return;const items=Array.from(e.currentTarget.querySelectorAll<HTMLElement>('a[href],button:not(:disabled),input:not(:disabled)'));if(!items.length)return;e.preventDefault();const index=items.indexOf(document.activeElement as HTMLElement);items[(index+(e.shiftKey?-1:1)+items.length)%items.length].focus();}}><h2 id="cost-title">确认本次真实调用</h2><p>将向百炼 {costPrompt.model} 发送{costPrompt.data_categories.join('、')}。</p><p>本次保守预占最多 ¥{costPrompt.maximum_cost}，仅允许 1 次调用，不自动重试。</p><p>单次上限 ¥{yuan(costPrompt.budget.single_limit_micros)}；每月上限 ¥{yuan(costPrompt.budget.monthly_limit_micros)}，当前剩余 ¥{yuan(costPrompt.budget.remaining_micros)}。</p><p>{costPrompt.quote.notice||'按目录价预占；免费额度和折扣未抵扣。结果未知时保留占用，实际云账单需另行核对。'}</p><a href={costPrompt.quote.source} target="_blank" rel="noreferrer">官方价格依据（{costPrompt.quote.price_version}）↗</a><div className="actions"><button onClick={()=>resolveCost(false)}>取消</button><button className="primary" onClick={()=>resolveCost(true)}>确认金额并继续一次</button></div></dialog>}</WorkspaceFrame>;
+  </>}
+  {guest?null:page==='tasks'?routeTaskId&&<details id="task-processing" className="panel task-processing"><summary>处理记录 · 查看结果与问题</summary><ProcessingRecords key={'task:'+routeTaskId} taskId={routeTaskId} onOpenResult={openProcessingResult}/></details>:page!=='voices'&&page!=='costs'&&page!=='ranking'&&<ProcessingRecords key={page} area={page==='discover'?'discover':page==='validation'?'validation':undefined} full={page==='activity'} onOpenResult={openProcessingResult}/>}
+  {caps?.mode==='live'&&page!=='ranking'&&!guest&&<CostBudget/>}
+  {costPrompt&&<dialog ref={costDialog} className="cost-dialog" aria-labelledby="cost-title" onCancel={e=>{e.preventDefault();resolveCost(false);}} onKeyDown={e=>{if(e.key!=='Tab')return;const items=Array.from(e.currentTarget.querySelectorAll<HTMLElement>('a[href],button:not(:disabled),input:not(:disabled)'));if(!items.length)return;e.preventDefault();const index=items.indexOf(document.activeElement as HTMLElement);items[(index+(e.shiftKey?-1:1)+items.length)%items.length].focus();}}><h2 id="cost-title">确认本次真实调用</h2><p>将向百炼 {costPrompt.model} 发送{costPrompt.data_categories.join('、')}。</p><p>本次保守预占最多 ¥{costPrompt.maximum_cost}，仅允许 1 次调用，不自动重试。</p><p>单次上限 ¥{yuan(costPrompt.budget.single_limit_micros)}；每月上限 ¥{yuan(costPrompt.budget.monthly_limit_micros)}，当前剩余 ¥{yuan(costPrompt.budget.remaining_micros)}。</p><p>{costPrompt.quote.notice||'按目录价预占；免费额度和折扣未抵扣。结果未知时保留占用，实际云账单需另行核对。'}</p><a href={costPrompt.quote.source} target="_blank" rel="noreferrer">官方价格依据（{costPrompt.quote.price_version}）↗</a><div className="actions"><button onClick={()=>resolveCost(false)}>取消</button><button className="primary" onClick={()=>resolveCost(true)}>确认金额并继续一次</button></div></dialog>}</WorkspaceFrame></GuestContext.Provider>;
 }

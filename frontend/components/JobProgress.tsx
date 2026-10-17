@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import {type Job} from '../lib/api';
 import {usePolling} from '../lib/usePolling';
+import {useGuest} from '../lib/guest';
 export type JobDetail=Job & {title:string;status_label:string;guidance:string;actions:{kind:string;id?:string;task_id?:string;generation_id?:string;label:string}[];result?:{raw_text?:string}};
 export const jobPending=(status?:string)=>!status||['queued','running','needs_reconciliation'].includes(status);
 export function resultHref(action:JobDetail['actions'][number]) {
@@ -14,7 +15,9 @@ export function resultHref(action:JobDetail['actions'][number]) {
   return '/activity';
 }
 export default function JobProgress({jobId}:{jobId:string}) {
-  const {data:job,error,refresh}=usePolling<JobDetail>('/jobs/'+jobId);
+  const guest=useGuest();
+  const {data:job,error,refresh}=usePolling<JobDetail>(guest?null:'/jobs/'+jobId);
+  if(guest)return null;
   return <section className="operation-progress" aria-label="本次处理状态">
     <div className="panel-heading"><h3>{job?.title||'本次处理'}</h3><span className="badge">{job?.status_label||'正在读取进度'}</span></div>
     {error&&<p role="alert" className="error">进度暂时无法读取：{error}<button onClick={()=>void refresh().catch(()=>{})}>重新读取进度</button></p>}

@@ -1,9 +1,13 @@
+import {guestReadOnlyMessage} from './guest';
 export class ApiError extends Error {
   constructor(message: string, public status: number, public requestId?: string) { super(message); }
 }
 let csrf = '';
+let guest = false;
 export function setCsrf(value: string) { csrf = value; }
+export function setGuest(value: boolean) { guest = value; }
 export async function api<T>(path: string, body?: unknown, method = body === undefined ? 'GET' : 'POST', key?: string): Promise<T> {
+  if (guest && method !== 'GET' && path !== '/auth/logout') throw new ApiError(guestReadOnlyMessage, 403);
   const headers: Record<string, string> = {};
   if (method !== 'GET') {
     headers['X-CSRF-Token'] = csrf;

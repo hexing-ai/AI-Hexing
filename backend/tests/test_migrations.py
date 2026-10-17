@@ -20,6 +20,8 @@ def test_empty_database_migration_and_repeat(tmp_path):
     assert "source_url" in [c["name"] for c in inspect(engine).get_columns("assets")]
     # Follow the actual migration head; also verify the latest feature column.
     assert "hidden_from_library" in {c["name"] for c in inspect(engine).get_columns("voice_metadata")}
+    assert {"role", "invite_id"} <= {c["name"] for c in inspect(engine).get_columns("sessions")}
+    assert "invites" in inspect(engine).get_table_names()
     expected_head = ScriptDirectory.from_config(Config(str(ROOT / "backend/alembic.ini"))).get_current_head()
     with engine.connect() as db:
         assert db.scalar(text("select version_num from alembic_version")) == expected_head

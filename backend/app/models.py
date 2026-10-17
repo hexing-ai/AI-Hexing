@@ -50,6 +50,21 @@ class Session(Identity, Base):
     csrf_hash: Mapped[str] = mapped_column(String(64))
     expires_at: Mapped[float] = mapped_column(Float)
     revoked: Mapped[bool] = mapped_column(Boolean, default=False)
+    role: Mapped[str] = mapped_column(String(8), default="owner", server_default="owner")
+    invite_id: Mapped[str | None] = mapped_column(ForeignKey("invites.id"), nullable=True)
+
+
+class Invite(Identity, Base):
+    """Multi-use code granting read-only guest sessions on the owner's workspace."""
+
+    __tablename__ = "invites"
+    owner_id: Mapped[str] = mapped_column(ForeignKey("creators.id"), index=True)
+    code_hash: Mapped[str] = mapped_column(String(64), unique=True)
+    label: Mapped[str] = mapped_column(String(100), default="")
+    expires_at: Mapped[float] = mapped_column(Float)
+    revoked: Mapped[bool] = mapped_column(Boolean, default=False)
+    use_count: Mapped[int] = mapped_column(Integer, default=0)
+    last_used_at: Mapped[float | None] = mapped_column(Float, nullable=True)
 
 
 class LoginAttempt(Identity, Base):

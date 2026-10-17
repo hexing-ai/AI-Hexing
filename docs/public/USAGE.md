@@ -53,6 +53,20 @@ API、worker 和 Web 都需要运行。停止服务时在相应终端按 Ctrl+C�
 npm --prefix frontend run dev -- --hostname 127.0.0.1 --port 3060
 ```
 
+## 邀请访客只读浏览
+
+工作台只有一个创作者账户。想让别人看你的工作台时，生成邀请码发给对方：
+
+```bash
+.venv/bin/python -m backend.app.cli create-invite --label "发给谁"   # 默认 30 天，可多次使用；--days 改天数
+.venv/bin/python -m backend.app.cli list-invites                     # 查看状态和使用次数
+.venv/bin/python -m backend.app.cli revoke-invite --invite-id <ID>   # 作废，已登录的访客立即退出
+```
+
+邀请码只在生成时显示一次。访客在登录页「用邀请码访问」输入后，看到的是你的发现工具、创作任务和工具封神榜，可浏览稿件、播放正式配音和下载导出包；不能修改或生成任何内容，看不到我的声音、费用记录、处理记录和接入设置，也拿不到录音样本。访客会话最长 8 小时，且不超过邀请码到期时间。
+
+访客不能发起付费调用，全部费用都受 `.env` 中你的每月上限约束（默认 30 元）。对外开放前另见 [配置说明](CONFIGURATION.md) 的「登录限流」。
+
 ## 在线 Demo
 
 [免安装体验](https://hexing-ai.github.io/AI-Hexing/) 使用独立公开资料快照。可比较、编辑、复制、下载文本和查看 Bot；无登录和持久化、无真实生成或音频。浏览器复制权限关闭时可以直接选中文字复制。
