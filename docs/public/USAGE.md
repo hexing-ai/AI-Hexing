@@ -43,7 +43,7 @@ API、worker 和 Web 都需要运行。停止服务时在相应终端按 Ctrl+C�
 
 推荐从根目录运行 `python3.11 scripts/setup.py`。它检查 Python / Node、安装依赖、仅在 `.env` 不存在时创建默认 mock 配置，再执行数据库迁移。重新安装不会重置账号或覆盖配置；升级前请备份已有数据库。
 
-首次安装后运行 `.venv/bin/python -m backend.app.cli create-owner` 创建自己的账号；然后 `python3.11 scripts/start.py` 启动 API、worker 和 Web。看到 Ready 后访问 `http://127.0.0.1:3060/tasks`。按 Ctrl+C 可停止全部服务。该启动器固定使用文档中的本地端口；自定义部署请使用下列独立服务命令并调整前端代理与 origin。
+首次安装后运行 `.venv/bin/python -m backend.app.cli create-owner` 创建自己的账号；然后 `python3.11 scripts/start.py` 启动 API、worker 和 Web。看到 Ready 后访问 `http://127.0.0.1:3060/discover`。按 Ctrl+C 可停止全部服务。该启动器固定使用文档中的本地端口；自定义部署请使用下列独立服务命令并调整前端代理与 origin。
 
 手动启动（分别运行于三个终端）：
 

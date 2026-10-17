@@ -2,7 +2,7 @@
 
 import time
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
+from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
 import pytest
@@ -237,7 +237,7 @@ def test_legacy_permission_owner_mode_and_expired_price(env, budget, monkeypatch
     with env.sf() as db:
         assert costs.summary(db, budget[0], "other")["held_micros"] == 0
         assert costs.summary(db, env.settings, env.owner_id)["held_micros"] == 0
-    monkeypatch.setattr(costs, "PRICE_VALID_UNTIL", 0)
+    budget[0].price_valid_until = date(2000, 1, 1)
     with env.sf() as db:
         with pytest.raises(AppError) as e:
             costs.quote(db, budget[0], env.owner_id, "writing", budget[1])

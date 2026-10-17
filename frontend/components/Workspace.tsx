@@ -23,7 +23,7 @@ function Badge({value}:{value:string}) { return <span className={`badge ${['fail
 export default function Workspace() {
   const path = usePathname(); const router = useRouter();
   const routeTaskId=path.startsWith('/tasks/')?path.split('/')[2]:undefined;
-  const page=path.split('/')[1]||'tasks';
+  const page=path.split('/')[1]||'discover';
   const [auth, setAuth] = useState<'loading'|'in'|'out'|'error'>('loading');
   const [authAttempt,setAuthAttempt]=useState(0);
   const [caps, setCaps] = useState<Capabilities|null>(null);

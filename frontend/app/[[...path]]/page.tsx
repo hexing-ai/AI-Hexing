@@ -15,7 +15,7 @@ function valid(parts:string[]){
 }
 export async function generateMetadata({params}:Props):Promise<Metadata>{
   const {path=[]}=await params;
-  let title=titles[path[0]||'tasks']||'页面未找到';
+  let title=titles[path[0]||'discover']||'页面未找到';
   if(path.length>1){
     if(path[0]==='tasks')title=path[2]==='audio'?'配音结果':path[2]==='exports'?'素材包结果':path[2]==='generations'?'生成候选':'稿件与素材';
     if(path[0]==='voices')title=path[1]==='new'?'设置本人声音':'声音详情与试听';
@@ -27,7 +27,7 @@ export async function generateMetadata({params}:Props):Promise<Metadata>{
 }
 export default async function Page({params}:Props) {
   const {path=[]}=await params;
-  if(path.length===1&&path[0]==='login')redirect('/tasks');
+  if(path.length===1&&path[0]==='login')redirect('/discover');
   if(!valid(path))notFound();
   return <Workspace />;
 }

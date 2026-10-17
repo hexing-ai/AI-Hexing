@@ -4,6 +4,7 @@ import json
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
+from datetime import date
 
 import httpx
 import pytest
@@ -150,7 +151,7 @@ def test_change_after_authorization_blocks_dispatch(enrollment, monkeypatch, cha
     elif change == "host":
         live.settings.voice_sample_allowed_host = "other.oss-cn-beijing.aliyuncs.com"
     elif change == "price":
-        monkeypatch.setattr(costs, "ENROLLMENT_PRICE_VALID_UNTIL", 0)
+        live.settings.enrollment_price_valid_until = date(2000, 1, 1)
     else:
         with transaction(live.sf) as db:
             a = db.get(m.Asset, inputs["sample_asset_id"])

@@ -1,5 +1,6 @@
 import time
 from dataclasses import dataclass
+from datetime import date
 
 import pytest
 from fastapi.testclient import TestClient
@@ -45,6 +46,8 @@ def env(tmp_path):
         data_dir=tmp_path / "data",
         database_url="sqlite:///" + str(tmp_path / "db.sqlite"),
         provider_mode="mock",
+        price_valid_until=date(2099, 1, 1),
+        enrollment_price_valid_until=date(2099, 1, 1),
     )
     sf = factory(settings)
     Base.metadata.create_all(sf.kw["bind"])

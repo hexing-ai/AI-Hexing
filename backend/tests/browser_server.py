@@ -5,6 +5,7 @@ import secrets
 import subprocess
 import sys
 import time
+from datetime import date
 
 from backend.app.core.auth import hasher
 from backend.app.core.config import ROOT, Settings
@@ -27,6 +28,8 @@ def main():
         app_env="test",
         provider_mode="live" if ranking_qa else "mock",
         web_origin=qa_origin,
+        price_valid_until=date(2099, 1, 1),
+        enrollment_price_valid_until=date(2099, 1, 1),
     )
     sf = factory(settings)
     Base.metadata.create_all(sf.kw["bind"])

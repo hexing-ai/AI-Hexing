@@ -64,7 +64,7 @@ def main():
     try:
         for command in commands:
             processes.append(subprocess.Popen(command, cwd=ROOT, env=env, start_new_session=True))
-        print("AI-Hexing 启动中。待 Web 显示 Ready 后打开 http://127.0.0.1:3060/tasks；Ctrl+C 停止全部服务。", flush=True)
+        print("AI-Hexing 启动中。待 Web 显示 Ready 后打开 http://127.0.0.1:3060/discover；Ctrl+C 停止全部服务。", flush=True)
         while all(process.poll() is None for process in processes):
             time.sleep(0.5)
         raise SystemExit("某个服务已退出，正在停止本次启动的其他服务。请检查上方日志。")

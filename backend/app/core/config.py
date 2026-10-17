@@ -1,3 +1,4 @@
+from datetime import date
 from functools import lru_cache
 from pathlib import Path
 from typing import Literal
@@ -39,6 +40,9 @@ class Settings(BaseSettings):
     session_ttl_seconds: int = 28800
     cost_single_limit_micros: int = Field(default=1_000_000, ge=0)
     cost_monthly_limit_micros: int = Field(default=30_000_000, ge=0)
+    # Hard-coded directory prices stop quoting from 00:00 Asia/Shanghai on these dates until re-verified.
+    price_valid_until: date = date(2026, 10, 9)
+    enrollment_price_valid_until: date = date(2026, 10, 10)
     max_upload_bytes: int = 20 * 1024 * 1024
     public_event_source_per_minute: int = Field(default=60, ge=1, le=600)
     public_event_total_per_minute: int = Field(default=600, ge=1, le=6000)

@@ -6,8 +6,8 @@ import WindowLogin from './WindowLogin';
 import {DialogFocusProvider} from './ConfirmDialog';
 
 const navigation = [
-  {href:'/tasks', label:'创作任务', icon:'file'},
   {href:'/discover', label:'发现工具', icon:'discover'},
+  {href:'/tasks', label:'创作任务', icon:'file'},
   {href:'/voices', label:'我的声音', icon:'voice'},
   {href:'/ranking', label:'工具封神榜', icon:'trophy'},
 ] as const;
@@ -38,7 +38,7 @@ export default function WorkspaceFrame({page,mode,onLogout,children}:{page:strin
   const close=()=>menu.current?.close();
   const title=[...navigation,...utilities].find(item=>item.href==='/'+page)?.label||'创作工作台';
   const links=(items:readonly {href:string;label:string;icon:string}[])=>items.map(item=><Link key={item.href} href={item.href} className={item.href==='/'+page?'active':''} aria-current={item.href==='/'+page?'page':undefined} onClick={close}><WorkspaceIcon name={item.icon}/>{item.label}</Link>);
-  const brand=<Link href="/tasks" className="workspace-brand" onClick={close}><span className="brand-symbol" aria-hidden="true">H</span>AI-Hexing</Link>;
+  const brand=<Link href="/discover" className="workspace-brand" onClick={close}><span className="brand-symbol" aria-hidden="true">H</span>AI-Hexing</Link>;
   const sidebar=<>{brand}<span className="nav-caption">创作空间</span><nav aria-label="工作台导航">{links(navigation)}</nav><div className="workspace-utilities"><nav aria-label="辅助导航">{links(utilities)}</nav><div className="workspace-account"><span className="account-avatar" aria-hidden="true">H</span><span>我的工作台</span><button className="text-button" onClick={onLogout}>退出</button></div></div></>;
   return <DialogFocusProvider><div className="shell hexing-workspace">
     <a className="skip-link" href="#workspace-main">跳到主要内容</a>

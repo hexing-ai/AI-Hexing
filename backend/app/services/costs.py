@@ -16,21 +16,23 @@ from backend.app.services.common import digest, owned
 
 PRICE_VERSION = "bailian-beijing-2026-09-09"
 PRICE_SOURCE = "https://help.aliyun.com/zh/model-studio/model-pricing"
-PRICE_VALID_UNTIL = datetime(2026, 10, 9, tzinfo=ZoneInfo("Asia/Shanghai")).timestamp()
 TEXT_ACTIONS = {"analysis", "writing", "generation", "discovery_score", "discovery_brief"}
 VOICE_ACTIONS = {"voice_preview", "voice_reuse", "audio_generation"}
 FREE_ACTIONS = {"import", "discovery_search", "voice_delete", "export"}
 ENROLLMENT_PRICE_VERSION = "cosyvoice-beijing-create-free-2026-09-10"
 ENROLLMENT_PRICE_SOURCE = "https://help.aliyun.com/zh/model-studio/voice-cloning-user-guide"
-ENROLLMENT_PRICE_VALID_UNTIL = datetime(2026, 10, 10, tzinfo=ZoneInfo("Asia/Shanghai")).timestamp()
 ENROLLMENT_RULE = "cosyvoice_create_voice_free"
+
+
+def expired(day):
+    return time.time() >= datetime(day.year, day.month, day.day, tzinfo=ZoneInfo("Asia/Shanghai")).timestamp()
 
 
 def enrollment_quote(db, settings, owner, inputs, prepared=None):
     from backend.app.services.jobs import validate_inputs
     from backend.app.services.providers import enrollment_request
 
-    if time.time() >= ENROLLMENT_PRICE_VALID_UNTIL:
+    if expired(settings.enrollment_price_valid_until):
         raise AppError("PRICE_EXPIRED", "声音复刻价目已过核验期限，请先核实官方价格。")
     validate_inputs(db, settings, owner, "voice_enrollment", inputs)
     sample = owned(db, m.Asset, inputs["sample_asset_id"], owner, settings.provider_mode)
@@ -80,7 +82,7 @@ def quote(db, settings, owner, action, inputs, prepared=None):
 
     if action == "voice_enrollment":
         return enrollment_quote(db, settings, owner, inputs, prepared)
-    if time.time() >= PRICE_VALID_UNTIL:
+    if expired(settings.price_valid_until):
         raise AppError("PRICE_EXPIRED", "价目已过核验期限，请核实官方价格后再调用。")
     if action in VOICE_ACTIONS:
         if settings.voice_target_model != "cosyvoice-v3.5-flash" or settings.voice_region != "beijing":

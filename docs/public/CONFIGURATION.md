@@ -57,3 +57,5 @@ COST_MONTHLY_LIMIT_MICROS=30000000
 真实调用先展示报价并获取确认，再预占预算；计价不可确定、价目过期或超过限额时不提交。结果未知保留占用，不自动重发。报价、预占与实际账单分别展示，不能将估算当成已扣费金额。
 
 本地目录价具有来源与有效期，服务商可能更新价格；免费额度不作为预算计算前提。预算仅覆盖此工作台纳入计价的新增模型请求，不包含 OSS、其他应用调用或历史账单。模型报价实现见 `backend/app/services/costs.py`。
+
+价目到期后所有付费操作都会提示“价目已过核验期限”。到[模型计价](https://help.aliyun.com/zh/model-studio/model-pricing)与[声音复刻说明](https://help.aliyun.com/zh/model-studio/voice-cloning-user-guide)核实 `costs.py` 中的单价仍然有效后，在 `.env` 延后 `PRICE_VALID_UNTIL`（文本与配音）和 `ENROLLMENT_PRICE_VALID_UNTIL`（创建音色）并重启 API 与 worker；单价有变化时须先修改代码。
