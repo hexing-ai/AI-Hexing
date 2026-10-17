@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PRIVATE_SUFFIXES = {".db", ".sqlite", ".sqlite3", ".wav", ".mp3", ".m4a", ".zip", ".pem", ".key"}
-PRIVATE_PARTS = {"data", ".venv", "node_modules", ".next", ".next-qa", "playwright-report", "test-results"}
+PRIVATE_PARTS = {"data", ".venv", "node_modules", ".next", ".next-qa", ".next-demo", "playwright-report", "test-results"}
 SECRET = re.compile(rb"(?:sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{30,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----)")
 LOCAL_PATH = re.compile(rb"/" + rb"Users/[^/\s]+/")
 

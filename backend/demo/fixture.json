@@ -1,0 +1,488 @@
+{
+ "note": "Public GitHub metadata and README text fetched 2026-10-17; reviewed demo outputs replayed by DemoProviders.",
+ "repositories": {
+  "MengTo/sketchbook": {
+   "metadata": {
+    "archived": false,
+    "description": "A page-flipping sketchbook of Singapore. One static HTML file: drag to turn the page, drag the magnifier across it.",
+    "fork": false,
+    "full_name": "MengTo/sketchbook",
+    "html_url": "https://github.com/MengTo/sketchbook",
+    "id": 1325104810,
+    "license": null,
+    "stargazers_count": 669,
+    "updated_at": "2026-10-15T07:21:41Z"
+   },
+   "readme": "# Sketchbook\n\nA page-flipping sketchbook of Singapore, built as one static HTML file. Drag a page and the leaf bends the way paper bends, then drag the brass magnifier across the spread to read the ink up close.\n\n[**View the live site**](https://mengto.com)\n\n![The sketchbook open on the Marina Bay skyline, with the magnifier resting on the ink](assets/sketchbook-preview.jpg)\n\n## Inspiration\n\nBuilt after seeing [Matthew Yu's](https://x.com/matthewyuart) personal portfolio concept, which he open-sourced at [matthewyuart/personalportfolio](https://github.com/matthewyuart/personalportfolio). That repository is what made this possible rather than a rough approximation of it.\n\nBooks and pages are some of the most interesting UIs to explore, and an agent will only give you the basics unless you hand it a solid open-source project to work from. Everything past that came from asking for one behaviour at a time: drag to paginate, then many rounds of fixes for shadows, clipping, alpha masks and turn logic, then a magnifier that has to move out of the way when a page sweeps past it.\n\n## What is inside\n\n- Nine watercolour spreads of Singapore, from Marina Bay Sands to the Botanic Gardens, with an index that jumps to any plate.\n- Drag the spread to turn a page, or throw it and let the velocity decide whether the leaf commits or falls back.\n- A magnifier that lies on the desk above the paper. Drag it anywhere, and it slides aside when a turning leaf sweeps through it.\n- A pointer parallax that leans the book toward the cursor without dragging the magnifier along with it.\n- An opening riffle that flicks through the book on load, with directional motion blur on the leaves.\n- Paper textures, watercolour washes and botanical ornaments layered behind the page.\n- No build step, no dependencies, and no external requests. Fonts and artwork are served from the repository.\n\n## How it is made\n\n**The page turn.** The turning leaf is not a flat panel on a hinge. It is a chain of nested strips whose tangent sweeps through an arc, so the surface curves along its width and the paper bends instead of pivoting like a door. Each strip carries a front and back face with `backface-visibility` doing the flip, plus a shading gradient and a specular wash that track the leaf's angle to the light.\n\n**The magnifier.** The lens holds a second copy of the book, scaled about whichever page point sits under the glass and masked to a circle. That copy lives outside the parallax transform, so leaning the book never drags the glass with it, and the copy fades out as the glass wanders off the paper so you are left looking through plain glass rather than at a sliver of page floating on the desk.\n\n**The artwork.** The spreads were generated with gpt image 2, which is very good at these Singapore sketches. The paper grain, watercolour washes and botanical ornaments are what give the page its personality.\n\n**The type.** Instrument Serif and Newsreader, subset to the characters the page actually uses so the three font files come to 164KB.\n\nEverything lives in [`index.html`](index.html): layout, styles, the page-turn geometry, the loupe, and the interaction state. It is 48KB. The `sketchbook/` folder holds the art and the fonts.\n\n## Run locally\n\nServe the folder with any static file server, then open the local URL:\n\n```sh\npython3 -m http.server 4173\n```\n\nOpening `index.html` straight off disk works too, though the fonts load more reliably over http.\n\n## Accessibility and input\n\nThe magnifier is hidden on touch devices, where there is no cursor to drag it with, and the book falls back to tap-to-turn. `prefers-reduced-motion` skips the opening riffle and settles page turns without animation.\n\n## Deployment\n\nGitHub Pages builds from `main` through [the Actions workflow](.github/workflows/pages.yml) and serves at [mengto.com](https://mengto.com).\n\n## More open source\n\n- **[Skills](https://github.com/MengTo/Skills)** — agent skills for designers and builders using Codex, Claude, Cursor and other AI coding agents. Browse them at [ui-skills.com](https://ui-skills.com).\n- **[The Complete Shelf](https://github.com/MengTo/complete-shelf)** — seven interactive clothbound hardcovers in a single Three.js file. [Live](https://mengto.github.io/complete-shelf/)\n\n## What I build\n\n- **[Aura](https://aura.build)** — an AI website builder that creates landing pages in seconds and exports to HTML and Figma.\n- **[Design+Code](https://designcode.io)** — learn to design and code React and Swift apps.\n- **[DreamCut](https://dreamcut.ai)** — an AI video editor and screen recorder.\n\n## Credits\n\n- Concept and original open source: [Matthew Yu](https://github.com/matthewyuart/personalportfolio)\n- Sketches: gpt image 2\n- Built with Claude Code\n"
+  },
+  "ollama/ollama": {
+   "metadata": {
+    "archived": false,
+    "description": "Get up and running with Kimi, GLM, MiniMax, DeepSeek, gpt-oss, Qwen, Gemma and other models.",
+    "fork": false,
+    "full_name": "ollama/ollama",
+    "html_url": "https://github.com/ollama/ollama",
+    "id": 658928958,
+    "license": {
+     "key": "mit",
+     "name": "MIT License",
+     "spdx_id": "MIT"
+    },
+    "stargazers_count": 183578,
+    "updated_at": "2026-10-17T13:14:26Z"
+   },
+   "readme": "<p align=\"center\">\n  <a href=\"https://ollama.com\">\n    <img src=\"https://github.com/ollama/ollama/assets/3325447/0d0b44e2-8f4a-4e99-9b52-a5c1c741c8f7\" alt=\"ollama\" width=\"200\"/>\n  </a>\n</p>\n\n# Ollama\n\nStart building with open models. Access the latest releases locally or in the cloud with complete privacy.\n\n## Download\n\n### macOS\n\n```shell\ncurl -fsSL https://ollama.com/install.sh | sh\n```\n\nor [download manually](https://ollama.com/download/Ollama.dmg)\n\n### Windows\n\n```shell\nirm https://ollama.com/install.ps1 | iex\n```\n\nor [download manually](https://ollama.com/download/OllamaSetup.exe)\n\n### Linux\n\n```shell\ncurl -fsSL https://ollama.com/install.sh | sh\n```\n\n[Manual install instructions](https://docs.ollama.com/linux#manual-install)\n\n### Docker\n\nThe official [Ollama Docker image](https://hub.docker.com/r/ollama/ollama) `ollama/ollama` is available on Docker Hub.\n\n### Libraries\n\n- [ollama-python](https://github.com/ollama/ollama-python)\n- [ollama-js](https://github.com/ollama/ollama-js)\n\n### Community\n\n- [Discord](https://discord.gg/ollama)\n- [𝕏 (Twitter)](https://x.com/ollama)\n- [Reddit](https://reddit.com/r/ollama)\n\n## Get started\n\n```\nollama\n```\n\nYou'll be prompted to run a model or connect Ollama to your existing agents or applications such as `Claude Code`, `OpenClaw`, `OpenCode` , `Codex`, `Copilot`,  and more.\n\n### Coding\n\nTo launch a specific integration:\n\n```\nollama launch claude\n```\n\nSupported integrations include [Claude Code](https://docs.ollama.com/integrations/claude-code), [Codex](https://docs.ollama.com/integrations/codex), [Copilot CLI](https://docs.ollama.com/integrations/copilot-cli), [DeepSeek Harness](https://docs.ollama.com/integrations/deepseek-harness), [Droid](https://docs.ollama.com/integrations/droid), and [OpenCode](https://docs.ollama.com/integrations/opencode).\n\n### AI assistant\n\nUse [OpenClaw](https://docs.ollama.com/integrations/openclaw) to turn Ollama into a personal AI assistant across WhatsApp, Telegram, Slack, Discord, and more:\n\n```\nollama launch openclaw\n```\n\n### Chat with a model\n\nRun and chat with [Gemma 4](https://ollama.com/library/gemma4):\n\n```\nollama run gemma4\n```\n\nSee [ollama.com/library](https://ollama.com/library) for the full list.\n\nSee the [quickstart guide](https://docs.ollama.com/quickstart) for more details.\n\n## REST API\n\nOllama has a REST API for running and managing models.\n\n```\ncurl http://localhost:11434/api/chat -d '{\n  \"model\": \"gemma4\",\n  \"messages\": [{\n    \"role\": \"user\",\n    \"content\": \"Why is the sky blue?\"\n  }],\n  \"stream\": false\n}'\n```\n\nSee the [API documentation](https://docs.ollama.com/api) for all endpoints.\n\n### Python\n\n```\npip install ollama\n```\n\n```python\nfrom ollama import chat\n\nresponse = chat(model='gemma4', messages=[\n  {\n    'role': 'user',\n    'content': 'Why is the sky blue?',\n  },\n])\nprint(response.message.content)\n```\n\n### JavaScript\n\n```\nnpm i ollama\n```\n\n```javascript\nimport ollama from \"ollama\";\n\nconst response = await ollama.chat({\n  model: \"gemma4\",\n  messages: [{ role: \"user\", content: \"Why is the sky blue?\" }],\n});\nconsole.log(response.message.content);\n```\n\n## Supported backends\n\n- [llama.cpp](https://github.com/ggml-org/llama.cpp) project founded by Georgi Gerganov.\n\n## Documentation\n\n- [CLI reference](https://docs.ollama.com/cli)\n- [REST API reference](https://docs.ollama.com/api)\n- [Importing models](https://docs.ollama.com/import)\n- [Modelfile reference](https://docs.ollama.com/modelfile)\n- [Building from source](https://github.com/ollama/ollama/blob/main/docs/development.md)\n\n## Community Integrations\n\n> Want to add your project? Open a pull request.\n\n### Chat Interfaces\n\n#### Web\n\n- [Open WebUI](https://github.com/open-webui/open-webui) - Extensible, self-hosted AI interface\n- [Onyx](https://github.com/onyx-dot-app/onyx) - Connected AI workspace\n- [LibreChat](https://github.com/danny-avila/LibreChat) - Enhanced ChatGPT clone with multi-provider support\n- [Lobe Chat](https://github.com/lobehub/lobe-chat) - Modern chat framework with plugin ecosystem ([docs](https://lobehub.com/docs/self-hosting/examples/ollama))\n- [NextChat](https://github.com/ChatGPTNextWeb/ChatGPT-Next-Web) - Cross-platform ChatGPT UI ([docs](https://docs.nextchat.dev/models/ollama))\n- [Perplexica](https://github.com/ItzCrazyKns/Perplexica) - AI-powered search engine, open-source Perplexity alternative\n- [big-AGI](https://github.com/enricoros/big-AGI) - AI suite for professionals\n- [Lollms WebUI](https://github.com/ParisNeo/lollms-webui) - Multi-model web interface\n- [ChatOllama](https://github.com/sugarforever/chat-ollama) - Chatbot with knowledge bases\n- [Bionic GPT](https://github.com/bionic-gpt/bionic-gpt) - On-premise AI platform\n- [Chatbot UI](https://github.com/ivanfioravanti/chatbot-ollama) - ChatGPT-style web interface\n- [Hollama](https://github.com/fmaclen/hollama) - Minimal web interface\n- [Chatbox](https://github.com/Bin-Huang/Chatbox) - Desktop and web AI client\n- [chat](https://github.com/swuecho/chat) - Chat web app for teams\n- [Ollama RAG Chatbot](https://github.com/datvodinh/rag-chatbot.git) - Chat with multiple PDFs using RAG\n- [Tkinter-based client](https://github.com/chyok/ollama-gui) - Python desktop client\n\n#### Desktop\n\n- [Dify.AI](https://github.com/langgenius/dify) - LLM app development platform\n- [AnythingLLM](https://github.com/Mintplex-Labs/anything-llm) - All-in-one AI app for Mac, Windows, and Linux\n- [Maid](https://github.com/Mobile-Artificial-Intelligence/maid) - Cross-platform mobile and desktop client\n- [Witsy](https://github.com/nbonamy/witsy) - AI desktop app for Mac, Windows, and Linux\n- [Cherry Studio](https://github.com/kangfenmao/cherry-studio) - Multi-provider desktop client\n- [Ollama App](https://github.com/JHubi1/ollama-app) - Multi-platform client for desktop and mobile\n- [PyGPT](https://github.com/szczyglis-dev/py-gpt) - AI desktop assistant for Linux, Windows, and Mac\n- [Alpaca](https://github.com/Jeffser/Alpaca) - GTK4 client for Linux and macOS\n- [SwiftChat](https://github.com/aws-samples/swift-chat) - Cross-platform including iOS, Android, and Apple Vision Pro\n- [Enchanted](https://github.com/AugustDev/enchanted) - Native macOS and iOS client\n- [RWKV-Runner](https://github.com/josStorer/RWKV-Runner) - Multi-model desktop runner\n- [Ollama Grid Search](https://github.com/dezoito/ollama-grid-search) - Evaluate and compare models\n- [macai](https://github.com/Renset/macai) - macOS client for Ollama and ChatGPT\n- [AI Studio](https://github.com/MindWorkAI/AI-Studio) - Multi-provider desktop IDE\n- [Reins](https://github.com/ibrahimcetin/reins) - Parameter tuning and reasoning model support\n- [ConfiChat](https://github.com/1runeberg/confichat) - Privacy-focused with optional encryption\n- [LLocal.in](https://github.com/kartikm7/llocal) - Electron desktop client\n- [MindMac](https://mindmac.app) - AI chat client for Mac\n- [Msty](https://msty.app) - Multi-model desktop client\n- [BoltAI for Mac](https://boltai.com) - AI chat client for Mac\n- [IntelliBar](https://intellibar.app/) - AI-powered assistant for macOS\n- [Kerlig AI](https://www.kerlig.com/) - AI writing assistant for macOS\n- [Hillnote](https://hillnote.com) - Markdown-first AI workspace\n- [Perfect Memory AI](https://www.perfectmemory.ai/) - Productivity AI personalized by screen and meeting history\n\n#### Mobile\n\n- [Ollama Android Chat](https://github.com/sunshine0523/OllamaServer) - One-click Ollama on Android\n\n> SwiftChat, Enchanted, Maid, Ollama App, Reins, and ConfiChat listed above also support mobile platforms.\n\n### Code Editors & Development\n\n- [Cline](https://github.com/cline/cline) - VS Code extension for multi-file/whole-repo coding\n- [Continue](https://github.com/continuedev/continue) - Open-source AI code assistant for any IDE\n- [Void](https://github.com/voideditor/void) - Open source AI code editor, Cursor alternative\n- [Copilot for Obsidian](https://github.com/logancyang/obsidian-copilot) - AI assistant for Obsidian\n- [twinny](https://github.com/rjmacarthy/twinny) - Copilot and Copilot chat alternative\n- [gptel Emacs client](https://github.com/karthink/gptel) - LLM client for Emacs\n- [Ollama Copilot](https://github.com/bernardo-bruning/ollama-copilot) - Use Ollama as GitHub Copilot\n- [Obsidian Local GPT](https://github.com/pfrankov/obsidian-local-gpt) - Local AI for Obsidian\n- [Ellama Emacs client](https://github.com/s-kostyaev/ellama) - LLM tool for Emacs\n- [orbiton](https://github.com/xyproto/orbiton) - Config-free text editor with Ollama tab completion\n- [AI ST Completion](https://github.com/yaroslavyaroslav/OpenAI-sublime-text) - Sublime Text 4 AI assistant\n- [VT Code](https://github.com/vinhnx/vtcode) - Rust-based terminal coding agent with Tree-sitter\n- [QodeAssist](https://github.com/Palm1r/QodeAssist) - AI coding assistant for Qt Creator\n- [AI Toolkit for VS Code](https://aka.ms/ai-tooklit/ollama-docs) - Microsoft-official VS Code extension\n- [Open Interpreter](https://docs.openinterpreter.com/language-model-setup/local-models/ollama) - Natural language interface for computers\n- [oxi](https://github.com/maziluiosif/oxi) - Native Rust desktop coding agent with editor, Git panel and terminal\n\n### Libraries & SDKs\n\n- [LiteLLM](https://github.com/BerriAI/litellm) - Unified API for 100+ LLM providers\n- [Semantic Kernel](https://github.com/microsoft/semantic-kernel/tree/main/python/semantic_kernel/connectors/ai/ollama) - Microsoft AI orchestration SDK\n- [LangChain4j](https://github.com/langchain4j/langchain4j) - Java LangChain ([example](https://github.com/langchain4j/langchain4j-examples/tree/main/ollama-examples/src/main/java))\n- [LangChainGo](https://github.com/tmc/langchaingo/) - Go LangChain ([example](https://github.com/tmc/langchaingo/tree/main/examples/ollama-completion-example))\n- [Spring AI](https://github.com/spring-projects/spring-ai) - Spring framework AI support ([docs](https://docs.spring.io/spring-ai/reference/api/chat/ollama-chat.html))\n- [LangChain](https://python.langchain.com/docs/integrations/chat/ollama/) and [LangChain.js](https://js.langchain.com/docs/integrations/chat/ollama/) with [example](https://js.langchain.com/docs/tutorials/local_rag/)\n- [Ollama for Ruby](https://github.com/crmne/ruby_llm) - Ruby LLM library\n- [any-llm](https://github.com/mozilla-ai/any-llm) - Unified LLM interface by Mozilla\n- [OllamaSharp for .NET](https://github.com/awaescher/OllamaSharp) - .NET SDK\n- [LangChainRust](https://github.com/Abraxas-365/langchain-rust) - Rust LangChain ([example](https://github.com/Abraxas-365/langchain-rust/blob/main/examples/llm_ollama.rs))\n- [Agents-Flex for Java](https://github.com/agents-flex/agents-flex) - Java agent framework ([example](https://github.com/agents-flex/agents-flex/tree/main/agents-flex-chat/agents-flex-chat-ollama))\n- [Elixir LangChain](https://github.com/brainlid/langchain) - Elixir LangChain\n- [Ollama-rs for Rust](https://github.com/pepperoni21/ollama-rs) - Rust SDK\n- [LangChain for .NET](https://github.com/tryAGI/LangChain) - .NET LangChain ([example](https://github.com/tryAGI/LangChain/blob/main/examples/LangChain.Samples.OpenAI/Program.cs))\n- [chromem-go](https://github.com/philippgille/chromem-go) - Go vector database with Ollama embeddings ([example](https://github.com/philippgille/chromem-go/tree/v0.5.0/examples/rag-wikipedia-ollama))\n- [LangChainDart](https://github.com/davidmigloz/langchain_dart) - Dart LangChain\n- [LlmTornado](https://github.com/lofcz/llmtornado) - Unified C# interface for multiple inference APIs\n- [Ollama4j for Java](https://github.com/ollama4j/ollama4j) - Java SDK\n- [Ollama for Laravel](https://github.com/cloudstudio/ollama-laravel) - Laravel integration\n- [Ollama for Swift](https://github.com/mattt/ollama-swift) - Swift SDK\n- [LlamaIndex](https://docs.llamaindex.ai/en/stable/examples/llm/ollama/) and [LlamaIndexTS](https://developers.llamaindex.ai/typescript/framework/modules/models/llms/ollama/) - Data framework for LLM apps\n- [Haystack](https://github.com/deepset-ai/haystack-integrations/blob/main/integrations/ollama.md) - AI pipeline framework\n- [Firebase Genkit](https://firebase.google.com/docs/genkit/plugins/ollama) - Google AI framework\n- [Ollama-hpp for C++](https://github.com/jmont-dev/ollama-hpp) - C++ SDK\n- [PromptingTools.jl](https://github.com/svilupp/PromptingTools.jl) - Julia LLM toolkit ([example](https://svilupp.github.io/PromptingTools.jl/dev/examples/working_with_ollama))\n- [Ollama for R - rollama](https://github.com/JBGruber/rollama) - R SDK\n- [Portkey](https://portkey.ai/docs/welcome/integration-guides/ollama) - AI gateway\n- [Testcontainers](https://testcontainers.com/modules/ollama/) - Container-based testing\n- [LLPhant](https://github.com/theodo-group/LLPhant?tab=readme-ov-file#ollama) - PHP AI framework\n\n### Frameworks & Agents\n\n- [AutoGPT](https://github.com/Significant-Gravitas/AutoGPT/blob/master/docs/platform/ollama.md) - Autonomous AI agent platform\n- [crewAI](https://github.com/crewAIInc/crewAI) - Multi-agent orchestration framework\n- [Strands Agents](https://github.com/strands-agents/sdk-python) - Model-driven agent building by AWS\n- [Cheshire Cat](https://github.com/cheshire-cat-ai/core) - AI assistant framework\n- [any-agent](https://github.com/mozilla-ai/any-agent) - Unified agent framework interface by Mozilla\n- [Stakpak](https://github.com/stakpak/agent) - Open source DevOps agent\n- [Hexabot](https://github.com/hexastack/hexabot) - Conversational AI builder\n- [Neuro SAN](https://github.com/cognizant-ai-lab/neuro-san-studio) - Multi-agent orchestration ([docs](https://github.com/cognizant-ai-lab/neuro-san-studio/blob/main/docs/user_guide.md#ollama))\n\n### RAG & Knowledge Bases\n\n- [RAGFlow](https://github.com/infiniflow/ragflow) - RAG engine based on deep document understanding\n- [R2R](https://github.com/SciPhi-AI/R2R) - Open-source RAG engine\n- [MaxKB](https://github.com/1Panel-dev/MaxKB/) - Ready-to-use RAG chatbot\n- [Minima](https://github.com/dmayboroda/minima) - On-premises or fully local RAG\n- [Chipper](https://github.com/TilmanGriesel/chipper) - AI interface with Haystack RAG\n- [ARGO](https://github.com/xark-argo/argo) - RAG and deep research on Mac/Windows/Linux\n- [Archyve](https://github.com/nickthecook/archyve) - RAG-enabling document library\n- [Casibase](https://casibase.org) - AI knowledge base with RAG and SSO\n- [BrainSoup](https://www.nurgo-software.com/products/brainsoup) - Native client with RAG and multi-agent automation\n\n### Bots & Messaging\n\n- [LangBot](https://github.com/RockChinQ/LangBot) - Multi-platform messaging bots with agents and RAG\n- [AstrBot](https://github.com/AstrBotDevs/AstrBot/) - Multi-platform chatbot with RAG and plugins\n- [Discord-Ollama Chat Bot](https://github.com/kevinthedang/discord-ollama) - TypeScript Discord bot\n- [Ollama Telegram Bot](https://github.com/ruecat/ollama-telegram) - Telegram bot\n- [LLM Telegram Bot](https://github.com/innightwolfsleep/llm_telegram_bot) - Telegram bot for roleplay\n\n### Terminal & CLI\n\n- [aichat](https://github.com/sigoden/aichat) - All-in-one LLM CLI with Shell Assistant, RAG, and AI tools\n- [oterm](https://github.com/ggozad/oterm) - Terminal client for Ollama\n- [gollama](https://github.com/sammcj/gollama) - Go-based model manager for Ollama\n- [tlm](https://github.com/yusufcanb/tlm) - Local shell copilot\n- [tenere](https://github.com/pythops/tenere) - TUI for LLMs\n- [ParLlama](https://github.com/paulrobello/parllama) - TUI for Ollama\n- [llm-ollama](https://github.com/taketwo/llm-ollama) - Plugin for [Datasette's LLM CLI](https://llm.datasette.io/en/stable/)\n- [ShellOracle](https://github.com/djcopley/ShellOracle) - Shell command suggestions\n- [LLM-X](https://github.com/mrdjohnson/llm-x) - Progressive web app for LLMs\n- [cmdh](https://github.com/pgibler/cmdh) - Natural language to shell commands\n- [VT](https://github.com/vinhnx/vt.ai) - Minimal multimodal AI chat app\n\n### Productivity & Apps\n\n- [AppFlowy](https://github.com/AppFlowy-IO/AppFlowy) - AI collaborative workspace, self-hostable Notion alternative\n- [Screenpipe](https://github.com/mediar-ai/screenpipe) - 24/7 screen and mic recording with AI-powered search\n- [Vibe](https://github.com/thewh1teagle/vibe) - Transcribe and analyze meetings\n- [Page Assist](https://github.com/n4ze3m/page-assist) - Chrome extension for AI-powered browsing\n- [NativeMind](https://github.com/NativeMindBrowser/NativeMindExtension) - Private, on-device browser AI assistant\n- [Ollama Fortress](https://github.com/ParisNeo/ollama_proxy_server) - Security proxy for Ollama\n- [1Panel](https://github.com/1Panel-dev/1Panel/) - Web-based Linux server management\n- [Writeopia](https://github.com/Writeopia/Writeopia) - Text editor with Ollama integration\n- [QA-Pilot](https://github.com/reid41/QA-Pilot) - GitHub code repository understanding\n- [Raycast extension](https://github.com/MassimilianoPasquini97/raycast_ollama) - Ollama in Raycast\n- [Painting Droid](https://github.com/mateuszmigas/painting-droid) - Painting app with AI integrations\n- [Serene Pub](https://github.com/doolijb/serene-pub) - AI roleplaying app\n- [Mayan EDMS](https://gitlab.com/mayan-edms/mayan-edms) - Document management with Ollama workflows\n- [TagSpaces](https://www.tagspaces.org) - File management with [AI tagging](https://docs.tagspaces.org/ai/)\n\n### Observability & Monitoring\n\n- [Opik](https://www.comet.com/docs/opik/cookbook/ollama) - Debug, evaluate, and monitor LLM applications\n- [OpenLIT](https://github.com/openlit/openlit) - OpenTelemetry-native monitoring for Ollama and GPUs\n- [Lunary](https://lunary.ai/docs/integrations/ollama) - LLM observability with analytics and PII masking\n- [Langfuse](https://langfuse.com/docs/integrations/ollama) - Open source LLM observability\n- [HoneyHive](https://docs.honeyhive.ai/integrations/ollama) - AI observability and evaluation for agents\n- [MLflow Tracing](https://mlflow.org/docs/latest/llms/tracing/index.html#automatic-tracing) - Open source LLM observability\n\n### Database & Embeddings\n\n- [pgai](https://github.com/timescale/pgai) - PostgreSQL as a vector database ([guide](https://github.com/timescale/pgai/blob/main/docs/vectorizer-quick-start.md))\n- [MindsDB](https://docs.mindsdb.com/integrations/ai-engines/ollama) - Connect Ollama with 200+ data platforms\n- [chromem-go](https://github.com/philippgille/chromem-go/blob/v0.5.0/embed_ollama.go) - Embeddable vector database for Go ([example](https://github.com/philippgille/chromem-go/tree/v0.5.0/examples/rag-wikipedia-ollama))\n- [Kangaroo](https://github.com/dbkangaroo/kangaroo) - AI-powered SQL client\n\n### Infrastructure & Deployment\n\n#### Cloud\n\n- [Google Cloud](https://cloud.google.com/run/docs/tutorials/gpu-gemma2-with-ollama)\n- [Fly.io](https://fly.io/docs/python/do-more/add-ollama/)\n- [Koyeb](https://www.koyeb.com/deploy/ollama)\n- [Harbor](https://github.com/av/harbor) - Containerized LLM toolkit with Ollama as default backend\n\n#### Package Managers\n\n- [Pacman](https://archlinux.org/packages/extra/x86_64/ollama/)\n- [Homebrew](https://formulae.brew.sh/formula/ollama)\n- [Nix package](https://search.nixos.org/packages?show=ollama&from=0&size=50&sort=relevance&type=packages&query=ollama)\n- [Helm Chart](https://artifacthub.io/packages/helm/ollama-helm/ollama)\n- [Gentoo](https://github.com/gentoo/gentoo/tree/master/sci-ml/ollama)\n- [Flox](https://flox.dev/blog/ollama-part-one)\n- [Guix channel](https://codeberg.org/tusharhero/ollama-guix)\n"
+  },
+  "ZHENGYANG-QIAN/AI-FITNESS": {
+   "metadata": {
+    "archived": false,
+    "description": "基于人体姿态估计的AI健身系统",
+    "fork": false,
+    "full_name": "ZHENGYANG-QIAN/AI-FITNESS",
+    "html_url": "https://github.com/ZHENGYANG-QIAN/AI-FITNESS",
+    "id": 653684949,
+    "license": null,
+    "stargazers_count": 51,
+    "updated_at": "2026-10-11T06:16:18Z"
+   },
+   "readme": "# AI-FITNESS\n**项目简介**: 基于人体关键点检测的健身动作计数应用\n\n**克隆项目:**\n\n```bash\ngit clone git@github.com:ZHENGYANG-QIAN/Human-body-key-point-detection.git\n```\n\n### 人体关键点预测\n\n本项目基于谷歌推出的人体姿态估计模型 [BlazePose: On-device Real-time Body Pose tracking](https://arxiv.org/pdf/2006.10204v1.pdf) [1], 它是一个轻量级的设备端单人关键点检测模型。其推理管道和网络结构如下。\n\n![11b070cb-0ae3-4ba9-9d62-196c207c33ed](README.assets/11b070cb-0ae3-4ba9-9d62-196c207c33ed.png)\n\n![00c94594-2eba-4522-830a-be0173b0ec63](README.assets/00c94594-2eba-4522-830a-be0173b0ec63.png)\n\nBlazePose模型的复现工作见[models](models)\n\n### requirements\n\n```python\npip install opencv-python==4.7.0.72\npip install mediapipe==0.9.1.0\npip install matplotlib==3.7.1\npip install numpy==1.24.2\npip install tqdm==4.65.0\npip install pillow==9.4.0\npip install requests==2.28.2\n```\n\n### MediaPipe\n\nMediaPipe 是 Google 推出的一款跨平台、轻量级、开放源代码的多媒体框架，旨在为开发人员和研究人员提供高效、易用、可靠的媒体处理解决方案。本项目借助MediaPipe框架使用训练好的BlazePose模型，来实现人体姿态估计。\n\n你可以点击以下链接获取更多信息：  [Pose-mediapipe](https://google.github.io/mediapipe/solutions/pose)\n\n通过查看我的[tutorial](tutorial)，你可以快速上手人体关键点的检测。 \n\n### 动作姿势分类\n对于类似深蹲和俯卧撑这样的常见运动，一个up和一个down是一个完整的动作，我们需要训练一个分类器来识别这个时刻的姿态是up还是down。\n\n一种常用的方法是使用 kNN 算法。你可以在[SquatCounter](tutorial/SquatCounter.ipynb)中阅读相关代码。\n\n### 部署\n\n#### 1.移动端\n\n移动端部署目前完成了安卓应用的构建。（你需要在专业的 Android 开发工具 - Android Studio 中进行修改、调试和生成 APK 文件：[Download Android Studio & App Tools - Android Developers](https://developer.android.com/studio)）\n\n本项目使用了 Google 的 Android 机器学习应用程序模板（ML Kit）：[Pose Detection | ML Kit | Google Developers](https://developers.google.com/ml-kit/vision/pose-detection)。App源码见[android](android)。\n\n<img src=\"README.assets/QQ图片20230614220914.jpg\" alt=\"QQ图片20230614220914\" style=\"zoom:50%;\" />\n\n#### 2.PC\n\nPC端部署使用了PyQt5，它是 Qt 应用程序框架在 Python 中的封装。因其支持跨平台的特点，可以同时在Linux、Windows、MacOS等多个平台运行。学习使用PyQt5：[PyQt5 · PyPI](https://pypi.org/project/PyQt5/)\n\n应用程序源码见[client](client)。\n\n![image-20230620140634468](README.assets/image-20230620140634468.png)\n\n### 引用文献\n\n\\[1\\]:Bazarevsky, Valentin, et al. \"Blazepose: On-device real-time body pose tracking.\" *arXiv preprint arXiv:2006.10204* (2020). \n\n#### 参考资料\n\n [基于BlazePose算法的机器人人体姿势识别与模仿)](https://github.com/TYZQ/graduation_project_2022) \n\n[Videos on Bilibili](https://www.bilibili.com/video/BV1dL4y1h7Q6?spm_id_from=333.1007.top_right_bar_window_custom_collection.content.click)\n\n[人体姿态识别](https://blog.csdn.net/jieqiang3/article/details/122195209) \n\n[人体关键点的动作分类](https://blog.csdn.net/chenpy/article/details/121466383) \n\n[MediaPipe](https://mediapipe.dev/) \n\n[Pose Detection  | ML Kit  | Google Developers](https://developers.google.com/ml-kit/vision/pose-detection) "
+  },
+  "BorisBW/claude-fitness-cn": {
+   "metadata": {
+    "archived": false,
+    "description": "AI Fitness Coach for Claude Code — Garmin / Coros / WHOOP / Apple Watch, Obsidian memory, bilingual (EN/CN) | 支持佳明·高驰·WHOOP·Apple Watch 的 AI 健身教练",
+    "fork": false,
+    "full_name": "BorisBW/claude-fitness-cn",
+    "html_url": "https://github.com/BorisBW/claude-fitness-cn",
+    "id": 1170601643,
+    "license": {
+     "key": "mit",
+     "name": "MIT License",
+     "spdx_id": "MIT"
+    },
+    "stargazers_count": 24,
+    "updated_at": "2026-10-17T03:35:47Z"
+   },
+   "readme": "# Claude Fitness Coach (Coach Paddy)\n\nA data-driven, multi-sport AI fitness coach for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Coach Paddy reads your watch + strength-log data, turns it into actionable coaching (morning readiness, evening recaps, weekly reviews, adaptive plans), records everything in **plain-text local files you own**, and surfaces it all in a **mobile dashboard you can deploy to Vercel**.\n\n**[中文说明见下方](#中文说明)**\n\n---\n\n## Supported wearables\n\nThe coaching logic never talks to a device directly — it reads **six slots** (`sleep`, `hrv`,\n`rhr`, `energy`, `load`, `activities`). Each source fills what it can, and the Readiness algorithm\ndegrades explicitly when a slot is missing. Adding a device is a row in a mapping table, not a fork.\n\n| | Garmin | Coros | WHOOP | Apple Watch |\n|---|:---:|:---:|:---:|:---:|\n| Sleep | ✅ score | ✅ score | ✅ score | ⚠️ duration only |\n| HRV | ✅ | ✅ | ✅ | ✅ |\n| Resting HR | ✅ | ✅ | ✅ | ✅ |\n| Energy / Body Battery | ✅ | ❌ | ✅ recovery % | ❌ |\n| ACWR / training load | ✅ true ACWR | ❌ | ⚠️ strain ratio | ❌ |\n| Activities | ✅ + splits | ✅ summary | ✅ summary | ⚠️ summary only |\n| Structured workout push | ✅ | ❌ | ❌ | ❌ |\n| **Pulls without your phone** | ✅ | ✅ | ✅ | ❌ phone must push |\n\n**Garmin** is the reference implementation and fills every slot. **WHOOP** is the closest\nalternative — a real cloud API with OAuth, and its recovery % is a genuine Body Battery analogue.\n**Coros** covers recovery and activities. **Apple Watch** is the odd one out: Apple publishes no\ncloud API for HealthKit, so data has to be pushed off the phone by a Shortcut, and several metrics\nsimply don't exist. It runs a [separate adapter skill](apple-watch-fitness-coach.md) — see\n[what it can't do](#apple-watch-limitations).\n\nPlus the strength layer, which no wearable covers:\n\n| Source | What it provides | How |\n|---|---|---|\n| **Xunji (训记)** | Strength-training log — read & write sets/reps/weight, Volume Load tracking | Xunji Open API v2 (token via env var) |\n\n## Core logic\n\nEverything is a transparent, tweakable formula in [`fitness-coach.md`](fitness-coach.md) — no black box.\n\n- **Readiness Score (1-10)** — base 5, adjusted by sleep, HRV, energy, RHR trend, and active injury. Drives whether today is a full, reduced, or rest day. **Degrades explicitly on devices that can't fill every slot**: a required subjective 1-5 question replaces a missing Body Battery, and the report states how many inputs produced the number.\n- **HRV via SWC** — scored against *your own* trailing 28 days (`μ ± 0.5×SD` band + 7-day rolling mean) instead of a manufacturer's lagging status label. **Source-agnostic by construction** — it survives a device switch, though the baseline has to be rebuilt over ~28 days.\n- **Race Confidence Score (0-100%)** — `Injury(40%) + Load(25%) + Fitness(25%) + Recovery(10%)`. Triggers a plan pivot if it drops too far.\n- **Training Load (two-pool model)** — unified endurance + strength load tracking. Endurance pool (k=7 decay) and strength pool (k=14, recovers 2x slower). CTL tracks **endurance fitness only**; strength enters fatigue but not fitness (strength progress is tracked by VL trends and PRs, not by a load average). sRPE modifier for strength sessions when reported. Full rationale in [`notes/training-load-encoding.md`](notes/training-load-encoding.md).\n- **ACWR** — Self-computed from our own load model: 7-day acute / 28-day chronic, **both pools included**. This captures strength training that Garmin's HR-based ACWR systematically underestimates. Safe band 0.8–1.3. The dashboard labels it `含力量` when using the model-based number.\n- **Volume Load** — `weight × total working reps` per lift, tracked over weeks so progress shows even when the weight doesn't change. Main lifts are tracked separately from accessories.\n\n## Local-first recording\n\nNo proprietary app database. Every report is read from and written back to markdown files in your own [Obsidian](https://obsidian.md/) vault:\n\n```\nFitness/\n├── Coach Memory.md      # Athlete profile, history, baselines, nutrition, injury log\n├── Training Plan.md     # Current plan + strength progress + Volume Load history\n├── Athlete Bio Data.md  # Daily: sleep / HRV / RHR / Body Battery / readiness + body comp\n└── Logs/                # Weekly training logs (morning + evening detail)\n    └── 2026-W10 (Mar02-Mar08).md\n```\n\nYou own the data, it's diff-able in git, and it's portable. Templates are in [`examples/`](examples/).\n\n## Mobile dashboard (deploy to Vercel)\n\nThe [`dashboard/`](dashboard/) folder is a static single-page app that parses those same local files into a phone-friendly dashboard — race countdowns, Volume Load charts, recovery trends, a Hyrox station radar, trail-prep tracker, and more. Deploy it to Vercel and check your training from anywhere.\n\n```bash\ncd dashboard\nnpm run sample          # synthetic demo data\nnpx vercel deploy --prod\n```\n\nYour real `data.json` is generated locally and git-ignored — the public deploy only ever shows synthetic sample data. See [`dashboard/README.md`](dashboard/README.md).\n\n---\n\n## Setup\n\n> **Installing this with an AI agent?** Point it at this repo and it can do the whole thing.\n> The two rules it must not get wrong:\n>\n> 1. **`fitness-coach.md` is always installed.** It holds all the coaching logic.\n> 2. **`apple-watch-fitness-coach.md` is an add-on, never a replacement.** It only overrides the\n>    data source and the Readiness formula, and is useless on its own. Install it *in addition to*\n>    the main skill, and only for Apple Watch users.\n>\n> | Wearable | Install | Then connect |\n> |---|---|---|\n> | Garmin / Coros / WHOOP | `fitness-coach.md` | the matching MCP server (step 1) |\n> | Apple Watch | `fitness-coach.md` **and** `apple-watch-fitness-coach.md` | no MCP — set up the Shortcut (step 1) |\n>\n> Ask the user which wearable they own before choosing. If they own more than one, ask which is\n> the primary — recovery metrics must all come from a single device or the SWC baselines drift.\n\n### 1. Connect your wearable\n\nPick the one you actually wear. Only Apple Watch needs a different route.\n\n<details open>\n<summary><b>Garmin (佳明)</b></summary>\n\n```bash\n# Global accounts\nuvx --python 3.12 --from git+https://github.com/Taxuspt/garmin_mcp garmin-mcp-auth\n\n# China accounts (garmin.cn)\nGARMIN_IS_CN=true uvx --python 3.12 --from git+https://github.com/BorisBW/garmin-mcp-cn garmin-mcp-auth\n```\nThen in `~/.claude/settings.json`:\n```json\n{\n  \"mcpServers\": {\n    \"garmin\": {\n      \"command\": \"uvx\",\n      \"args\": [\"--python\", \"3.12\", \"--from\", \"git+https://github.com/Taxuspt/garmin_mcp\", \"garmin-mcp\"]\n    }\n  }\n}\n```\n> China users: swap the repo for `git+https://github.com/BorisBW/garmin-mcp-cn` and add `\"env\": {\"GARMIN_IS_CN\": \"true\"}`.\n</details>\n\n<details>\n<summary><b>Coros (高驰)</b> — ⚠️ Chinese accounts must use <code>region=\"cn\"</code></summary>\n\nAdd the Coros MCP server to `~/.claude/settings.json` the same way, then authenticate.\n\n**The region gotcha, because it costs everyone an hour:** Chinese Coros accounts live on\n`teamcnapi.coros.com`. The auth tool documents `eu` and `us` only, but the underlying client also\naccepts `cn`. Logging in with `eu`/`us` **appears to succeed** and hands back a token — then every\ndata call fails with `Access token is invalid`. Authenticate with `region=\"cn\"`.\n\nTwo other quirks worth knowing:\n- Calories come back in **milli-kcal** — divide by 1000 (`415951` → 416 kcal).\n- `max_hr` is often `null`; `avg_hr` is reliable.\n\nCoros fills `sleep`, `hrv`, `rhr` and `activities`. There is no Body Battery equivalent and no\nACWR, so the Readiness algorithm runs its reduced form (see [Readiness](#core-logic)).\n</details>\n\n<details>\n<summary><b>WHOOP</b></summary>\n\nUses [`whoop-ai-mcp`](https://github.com/shashankswe2020-ux/whoop-mcp) (MIT). You need a WHOOP\ndeveloper app for the client id/secret — create one at [developer.whoop.com](https://developer.whoop.com/).\n\nThe setup wizard writes the config for you:\n```bash\nnpx whoop-ai-mcp setup --client=claude-code --verify\n```\n\nOr configure it by hand:\n```json\n{\n  \"mcpServers\": {\n    \"whoop\": {\n      \"command\": \"npx\",\n      \"args\": [\"whoop-ai-mcp\"],\n      \"env\": {\n        \"WHOOP_CLIENT_ID\": \"your_client_id\",\n        \"WHOOP_CLIENT_SECRET\": \"your_client_secret\"\n      }\n    }\n  }\n}\n```\nA browser opens for authorisation on first launch; tokens are cached locally and refresh\nautomatically.\n\n⚠️ **WHOOP strain is not ACWR** — it's a 0–21 logarithmic scale. The skill derives a 7d ÷ 28d\n*strain ratio* and labels it as such; it behaves like ACWR but the 0.8–1.3 band was calibrated on\nGarmin's number, so read it as directional.\n\n⚠️ Collection calls return at most 25 records, so the 28-day HRV baseline is built from\n`get_calendar` rather than a single collection call.\n\n⚠️ WHOOP requires an active paid membership — the hardware is inert without one.\n\n> Alternative: [`whoop-mcp-unofficial`](https://github.com/davidmosiah/whoop-mcp) (also MIT) has\n> higher npm download volume and ships releases more frequently, but far less independent\n> validation. Tool names differ, so the skill's mapping table would need updating if you switch.\n</details>\n\n<details>\n<summary><b>Apple Watch</b> — no MCP server, uses a free iOS Shortcut</summary>\n\nApple publishes **no cloud API** for HealthKit — no REST endpoint, no OAuth, no server-side\ntoken. Data can only leave the phone if the phone pushes it. So this route uses the stock,\nfree **Shortcuts** app to write JSON into iCloud Drive, which syncs to your desktop as an\nordinary file. **No MCP server, no paid app, no server to deploy.**\n\n```\nApple Watch → iPhone HealthKit → Shortcuts (scheduled) → iCloud Drive → desktop → skill\n```\n\nFull step-by-step setup is in [`apple-watch-fitness-coach.md`](apple-watch-fitness-coach.md).\nInstall **both** skills — the Apple one is a data-source adapter that reuses the main coaching\nlogic rather than duplicating it.\n\n<a name=\"apple-watch-limitations\"></a>\n**What Apple Watch can't do** (know this before you set it up):\n- **No Body Battery equivalent** → replaced by a required subjective 1-5 energy question\n- **No ACWR** → replaced by a plainly-labelled volume ratio\n- **No per-km splits, pace curves, HR-zone breakdown, GPS routes, cadence or running power**\n- **Sleep is duration-only** — Apple's Sleep Score is a derived metric and isn't exported\n- **No structured workout push**\n- **Best-effort delivery** — Shortcuts can't read Health data while the phone is locked, so a\n  scheduled run can miss. Each export covers the last 48 hours so the next run repairs the gap.\n</details>\n\n### 2. Set up your Obsidian vault\n\nCreate the file structure Coach Paddy reads and writes. Templates are in [`examples/`](examples/) — copy them and fill in your own data.\n\n```bash\n# Inside your Obsidian vault (or any folder you choose):\nmkdir -p Fitness/Logs Fitness/Archive\n\n# Copy templates as starting points:\ncp examples/coach-memory.md    \"YourVault/Fitness/Coach Memory.md\"\ncp examples/training-plan.md   \"YourVault/Fitness/Training Plan.md\"\ncp examples/athlete-bio-data.md \"YourVault/Fitness/Athlete Bio Data.md\"\n```\n\nThen edit these files to match your situation:\n- **Coach Memory.md** — your age, sport, injury history, equipment, goals\n- **Training Plan.md** — your current weekly structure, exercises, target paces\n- **Athlete Bio Data.md** — start with an empty daily table; the morning report fills it\n\nThe skill's **Memory Files** paths (in `fitness-coach.md`) default to `~/Obsidian Base/Fitness/`. If your vault is elsewhere, update the paths in the installed skill file.\n\n### 3. (Optional) Xunji strength logging\n\nSet your Xunji API token as an environment variable — **never hard-code it**:\n```bash\nexport XUNJI_TOKEN=\"xjllm_xxxxxxxx\"\n```\nThe skill calls the Xunji Open API with `Authorization: Bearer $XUNJI_TOKEN`. Movement-name mappings are in [`xunji-movements.md`](xunji-movements.md).\n\n### 4. Install the skill\n\n```bash\nmkdir -p ~/.claude/skills/fitness-coach\ncp fitness-coach.md   ~/.claude/skills/fitness-coach/SKILL.md\ncp xunji-movements.md ~/.claude/skills/fitness-coach/     # only if you use Xunji\n```\n\n**Apple Watch users — install the adapter as well:**\n```bash\nmkdir -p ~/.claude/skills/apple-watch-fitness-coach\ncp apple-watch-fitness-coach.md ~/.claude/skills/apple-watch-fitness-coach/SKILL.md\n```\nIt layers on top of the main skill (overriding only the data source and the Readiness formula),\nso keep both installed.\n\nThen edit the **Athlete Profile** and **Memory Files** paths in your installed `SKILL.md` to match\nyour sport and vault location.\n\n> **Upgrading from an earlier version?** Older releases installed to\n> `~/.claude/commands/fitness-coach.md`. That still works, but the `skills/` layout above is the\n> current mechanism — move it over and delete the old file so you don't run two copies.\n>\n> The recovery file was also renamed `Recovery Log.md` → `Athlete Bio Data.md`. Rename yours to\n> match; the dashboard reads either, preferring the new name.\n\n### 5. (Optional) Dashboard\n\nThe dashboard parses your Obsidian vault into a visual summary. To run it with your own data:\n\n```bash\ncd dashboard\n\n# Point at your vault's Fitness folder:\nFITNESS_DIR=\"/path/to/YourVault/Fitness\" node scripts/build-data.mjs\n\n# Preview locally:\nnpx serve public\n```\n\nTo customise the dashboard, edit the `curated` object in `build-data.mjs` — it holds your injuries, goals, PBs, race plans, diet targets, and physiology data. The parser functions above it are generic; `curated` is the part you personalise.\n\nTo deploy with sample data (for demo / public sharing):\n```bash\nnpm run sample          # generates synthetic data\nnpx vercel deploy --prod\n```\n\nYour real `data.json` is git-ignored — the public deploy only ever shows synthetic sample data.\n\n### 6. Use it\n\n```bash\nclaude\n> /fitness-coach morning      # readiness report before training\n> /fitness-coach evening      # training recap + injury check after\n> /fitness-coach weekly       # volume + ACWR + strength progress review\n> /fitness-coach plan         # generate or update training plan\n```\n\n## Commands\n\n| Command | When | What |\n|---|---|---|\n| `/fitness-coach` | Anytime | Free chat — training, nutrition, race strategy |\n| `/fitness-coach morning` | Wake up | Readiness Score + today's plan |\n| `/fitness-coach evening` | Post-training | Analysis + Race Confidence + injury check + logs to Obsidian (+ Xunji write-back for strength) |\n| `/fitness-coach weekly` | End of week | Volume trends + ACWR + Volume Load progress |\n| `/fitness-coach plan` | As needed | Generate/update training plan |\n\n## Repo structure\n\n```\nclaude-fitness-cn/\n├── README.md\n├── LICENSE\n├── fitness-coach.md              # Main skill — Garmin / Coros / WHOOP\n├── apple-watch-fitness-coach.md  # Apple Watch data-source adapter (install alongside)\n├── xunji-movements.md            # Strength movement name reference\n├── examples/               # Obsidian memory-file templates\n│   ├── coach-memory.md\n│   ├── training-plan.md\n│   └── athlete-bio-data.md\n├── notes/                  # Algorithm theory docs (design rationale + references)\n│   ├── training-load-encoding.md  # Two-pool CTL/ATL/TSB model, sRPE/VL layers\n│   ├── readiness.md               # Readiness Score, HRV SWC, recovery signals\n│   └── nutrition.md               # TDEE reversal, dynamic calorie target, gap logic\n└── dashboard/              # Vercel-deployable mobile dashboard\n    ├── public/index.html\n    ├── scripts/build-data.mjs\n    └── scripts/make-sample.mjs\n```\n\n---\n\n## 中文说明\n\n基于 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 的数据驱动多项目 AI 健身教练。Coach Paddy 读取你的手表 + 力量训练数据，转化为可执行的教练建议（晨间准备度、训练后复盘、周度回顾、自适应计划），把一切记录在**你自己拥有的纯文本本地文件**里，并通过**可部署到 Vercel 的手机端 dashboard** 随时浏览。\n\n### 支持的设备\n\n教练逻辑不直接对接设备，只读**六个数据槽**（`sleep` / `hrv` / `rhr` / `energy` / `load` / `activities`）。\n每个数据源填自己能填的槽，缺槽时准备度算法显式降级。加一块表 = 加一行映射，不需要 fork。\n\n| | 佳明 Garmin | 高驰 Coros | WHOOP | Apple Watch |\n|---|:---:|:---:|:---:|:---:|\n| 睡眠 | ✅ 评分 | ✅ 评分 | ✅ 评分 | ⚠️ 仅时长 |\n| HRV | ✅ | ✅ | ✅ | ✅ |\n| 静息心率 | ✅ | ✅ | ✅ | ✅ |\n| 能量 / Body Battery | ✅ | ❌ | ✅ recovery % | ❌ |\n| ACWR / 训练负荷 | ✅ 真 ACWR | ❌ | ⚠️ strain 比值 | ❌ |\n| 活动 | ✅ 含分段 | ✅ 汇总 | ✅ 汇总 | ⚠️ 仅汇总 |\n| 推结构化课程到表 | ✅ | ❌ | ❌ | ❌ |\n| **不需要手机在场** | ✅ | ✅ | ✅ | ❌ 靠手机推 |\n\n**佳明**是参考实现，六个槽全填。**WHOOP** 最接近——有真正的云端 API + OAuth，recovery % 是 Body\nBattery 的对位物（⚠️ 需付费会员，硬件不订阅就是块砖）。**高驰**覆盖恢复和活动，\n⚠️ **中国区账号必须用 `region=\"cn\"`**，用 eu/us 登录会\"成功\"但拉数据时报 token 无效。\n\n**Apple Watch 是例外**：苹果**不提供任何 HealthKit 云端 API**，数据只能由手机推出来。走系统自带\n的「快捷指令」定时导出 JSON 到 iCloud 云盘，电脑同步下来当普通文件读——**不需要 MCP、不需要付费\napp、不需要建服务器**。它用[独立的适配器 skill](apple-watch-fitness-coach.md)，\n且**有多项功能拿不到**：无 Body Battery、无 ACWR、无分段配速/心率区间/GPS 轨迹、睡眠只有时长、\n手机锁屏时导出会失败（靠每次导出覆盖 48 小时来补）。装之前先看清楚这张表。\n\n力量层（没有手表能覆盖）：\n\n| 来源 | 提供数据 | 方式 |\n|---|---|---|\n| **训记 Xunji** | 力量训练记录 — 读写组数/次数/重量，Volume Load 追踪 | 训记开放 API v2（token 走环境变量） |\n\n### 安装（两个 skill 的关系）\n\n大多数人是直接把这个 repo 链接丢给 agent 让它自己装。两条不能搞错：\n\n1. **`fitness-coach.md` 永远要装**，教练逻辑全在里面\n2. **`apple-watch-fitness-coach.md` 是附加，不是替代**——它只覆盖数据源和 Readiness 公式，单独装等于空转。Apple Watch 用户要**两个都装**\n\n| 设备 | 装哪些 | 再连什么 |\n|---|---|---|\n| 佳明 / 高驰 / WHOOP | `fitness-coach.md` | 对应的 MCP server |\n| Apple Watch | `fitness-coach.md` **+** `apple-watch-fitness-coach.md` | 不用 MCP，配快捷指令 |\n\n装之前先问用户戴哪块表。戴不止一块的话要问哪块是主表——恢复类指标必须全部来自同一块，否则 SWC 基线会漂。\n\n### 核心逻辑（全部为透明可调的公式，见 `fitness-coach.md`）\n\n- **准备度评分 (1-10)**：基准 5 分，按睡眠、HRV、Body Battery、RHR 趋势、伤病调整 → 决定今天全力/降量/休息。**缺槽时显式降级**：没有 Body Battery 的设备改用必答的主观 1-5 分（能量/酸痛）顶上，且报告里会标注这个分数是几项算出来的\n- **HRV 用 SWC 自算**：取自己近 28 天的 μ±0.5SD 作正常带 + 7 日滚动均值，不用厂商的滞后标签。**这套方法与数据源无关**，换表也成立（但换表要重新攒 28 天基线）\n- **比赛信心评分 (0-100%)**：伤病(40%) + 负荷(25%) + 竞技状态(25%) + 恢复(10%)，过低触发计划调整\n- **训练负荷（两池模型）**：统一的耐力+力量负荷追踪。耐力池（k=7 衰减）和力量池（k=14，恢复慢 2 倍）。CTL 只追踪**耐力体能**；力量进疲劳不进体能（力量进步用 VL 趋势和 PR 追踪）。力量日有 sRPE 时按强度修正。完整设计见 [`notes/training-load-encoding.md`](notes/training-load-encoding.md)\n- **ACWR**：用我们自己的负荷模型计算（7 天急性 / 28 天慢性，**两池都算**），捕捉 Garmin HR-based ACWR 系统性低估的力量训练。安全区 0.8–1.3。Dashboard 标注 `含力量`\n- **Volume Load**：每个动作 `重量 × 总工作次数`，按周追踪，重量没涨也能看到容量进步；大项与辅助分开追踪\n\n### 本地优先的记录方式\n\n没有私有 app 数据库，所有报告读写自你自己的 Obsidian 笔记库（`Coach Memory.md` / `Training Plan.md` / `Athlete Bio Data.md` / `Logs/`）。数据你拥有、可 git diff、可迁移。模板见 `examples/`。\n\n### 手机端 Dashboard\n\n`dashboard/` 是一个静态单页应用，把上述本地文件解析成手机友好的仪表盘（比赛倒计时、Volume Load 图表、恢复趋势、Hyrox 站点雷达、越野备赛追踪等），部署到 Vercel 随时随地查看。真实 `data.json` 本地生成且被 git 忽略，公开部署只展示合成示例数据。\n\n---\n\n## License\n\nMIT — see [LICENSE](LICENSE).\n\n## Credits\n\n- [Garmin MCP Server](https://github.com/Taxuspt/garmin_mcp) by Taxuspt\n- [python-garminconnect](https://github.com/cyberjunky/python-garminconnect) by cyberjunky\n- [whoop-ai-mcp](https://github.com/shashankswe2020-ux/whoop-mcp) by shashankswe2020-ux\n- Built with [Claude Code](https://docs.anthropic.com/en/docs/claude-code) by Anthropic\n"
+  },
+  "k1ein-chen/fitness-coach-rpg": {
+   "metadata": {
+    "archived": false,
+    "description": "一个本地文件驱动的 AI 健身教练 Skill。训练记录 + RPG 属性成长 + 剧情推进三合一，越用越懂你的长期陪练系统。",
+    "fork": false,
+    "full_name": "k1ein-chen/fitness-coach-rpg",
+    "html_url": "https://github.com/k1ein-chen/fitness-coach-rpg",
+    "id": 1228695623,
+    "license": {
+     "key": "mit",
+     "name": "MIT License",
+     "spdx_id": "MIT"
+    },
+    "stargazers_count": 100,
+    "updated_at": "2026-10-16T15:43:22Z"
+   },
+   "readme": "# Fitness Coach RPG 🎮💪\n\n> 把枯燥的现实训练，变成一场可以升级记录的异世界冒险\n\n![卧推起杠，化作斩击怪物，随后 LEVEL UP](./assets/demo-hero.gif)\n\n[![License](https://img.shields.io/github/license/k1ein-chen/fitness-coach-rpg)](./LICENSE)\n[![GitHub stars](https://img.shields.io/github/stars/k1ein-chen/fitness-coach-rpg?style=social)](https://github.com/k1ein-chen/fitness-coach-rpg)\n\n一个**对话驱动**的 AI 健身教练框架：训练记录、RPG 属性成长、剧情推进三者联动。你的每一次训练都会转化为角色成长和故事推进——不只是数据，还是冒险。\n\n```\n真实训练 → 经验值 & 属性成长 → 剧情推进 → 下一次训练的动力\n```\n\n---\n\n## ✨ 核心特性\n\n- 🎯 **对话式训练**：和 AI 聊天就能记录训练、获取建议、推进剧情\n- 📊 **自动加点**：完成训练自动获得 EXP，升级后属性点自动分配（力量/耐力/体质/敏捷/智力）\n- 📝 **智能记录**：自动追踪重量、次数、RPE、体感反馈，AI 会参考历史数据给建议\n- 🎭 **剧情模式**：可选的故事系统，把每次训练映射成你设定的世界里的冒险\n- 🌍 **自由世界观**：完全可定制。剑与魔法、武侠、乙游只是例子，也可以直接描述任何世界；未设定时可用预置的剑与魔法世界\n- 🔄 **恢复感知**：智能判断中断后的恢复强度，不硬来\n- 🤖 **越用越懂你**：AI 会记住你的偏好、弱项和进步节奏\n\n---\n\n## 🚀 快速开始\n\n已经有能读写文件的 AI Agent（Cursor、Claude Code、Codex 等）时，把安装和第一次训练交给它。想自己克隆，用路径 2。\n\n### 路径 1 — 一句话交给 Agent（推荐）\n\n把下面这段话发给你的 Agent：\n\n```text\n请帮我安装 https://github.com/k1ein-chen/fitness-coach-rpg ，按仓库 README 初始化档案。世界观可以自由定制（比如异世界、武侠、乙游，或者我自己描述的任何世界），请先问我想要什么世界观，然后引导我开始第一次训练。\n```\n\nEnglish:\n\n```text\nPlease install https://github.com/k1ein-chen/fitness-coach-rpg and initialize my profile following the repo README. The worldview is fully customizable (for example isekai, wuxia, otome, or any world I describe). Ask which worldview I want first, then guide me through my first workout.\n```\n\nAgent 会克隆仓库、按本 README 初始化档案，先问你想要什么世界观，再引导第一次训练。\n\n### 路径 2 — 手动克隆\n\n#### 1. 获取项目\n\n```bash\ngit clone https://github.com/k1ein-chen/fitness-coach-rpg.git\ncd fitness-coach-rpg\n```\n\n#### 2. 初始化档案\n\n**方式一：脚本初始化（推荐）**\n\n```bash\npython scripts/init_profile.py --name 你的名字 --theme 武侠\n```\n\n> `--theme` 是自由文本。「武侠」只是例子，可以换成你自己描述的任何世界。\n\n**方式二：手动复制**\n\n```bash\ncp -r assets/starter-profile user-data\n# 然后编辑 user-data/PROFILE.md 填入你的信息\n```\n\n> 💡 脚本只用 Python 标准库，无需安装依赖。没有 Python？直接复制模板也能用。\n\n#### 3. 开始训练\n\n在支持读写本地文件的 AI 里打开项目，对 AI 说：\n\n- \"开始训练\" — 直接开练\n- \"初始化档案\" — 完整设定流程\n- \"帮我做个计划\" — 制定训练计划\n\nAI 会自动读取你的档案和历史记录，给出个性化建议。\n\n---\n\n## 🎮 玩法说明\n\n### 训练与成长\n\n每次训练后，系统会自动：\n\n1. 记录训练数据（动作、重量、次数、RPE）\n2. 计算并发放经验值\n3. 检查是否升级，自动分配属性点\n4. 更新训练统计和个人最佳记录\n\n![完成训练后结算经验，升级并自动分配属性点](./assets/demo-exp.gif)\n\n### 剧情模式（可选）\n\n开启后，你的训练会映射为故事情节：\n\n| 训练类型 | 剧情映射 |\n|:---|:---|\n| 推日 (Push) | 突破、强攻、正面输出 |\n| 拉日 (Pull) | 控制、夺取、精确发力 |\n| 腿日 (Legs) | 负重、坚守、耐力考验 |\n| 恢复/有氧 | 营地修整、旅行、侦察 |\n\n![训练推动剧情进度，并在不同世界观之间切换](./assets/demo-story.gif)\n\n### 世界观选择\n\n世界观可以完全按你的描述定制。下表只是几种常见风格的等级称号示例，不是可选清单。预置世界在 `worlds/default/`（剑与魔法）；也可以用 `assets/starter-profile/story/WORLD.md` 从空白模板写自己的世界。\n\n| 主题 | 等级称号示例 |\n|:---|:---|\n| **剑与魔法** | 冒险者新人 → 见习佣兵 → 精英冒险家 → … → 位面守护者 |\n| **武侠** | 练气期 → 筑基期 → 金丹期 → … → 大乘期 |\n| **社会** | 健身房游客 → 月卡钉子户 → 自由重量区 → … → 传说中人 |\n\n不想要剧情？选择「经典模式」，纯教练功能。\n\n---\n\n## 👥 选择你的教练\n\n预设的凯圣王×谭指导适合力量增长。其他目标可以选择：\n\n| 目标 | 推荐教练 | 风格 |\n|:---|:---|:---|\n| 减脂塑形 | 周六野、帕梅拉 | 温柔鼓励 / 高效直接 |\n| 瑜伽柔韧 | 林芊妤 | 舒缓专注 |\n| 体态矫正 | 欧阳春晓 | 细致拆解 |\n| 零基础 | 韩小四 | 超友好 |\n\n初始化时告诉 AI：\"我想跟周六野练\"或\"力量日跟凯圣王，有氧跟帕梅拉\"——混搭也可以。\n\n详见 [教练风格指南](references/coach-guide.md)。\n\n---\n\n## 📁 项目结构\n\n```\nfitness-coach-rpg/\n├── SKILL.md                    # AI 行为说明书（核心）\n├── assets/starter-profile/     # 空白存档模板\n├── worlds/default/             # 预置世界设定（剑与魔法）\n├── references/                 # 训练方法论、RPG 规则、叙事模板\n├── scripts/                    # 辅助脚本（初始化、更新状态等）\n├── templates/                  # 训练日志模板\n└── examples/                   # 示例存档（用了一个月后的样子）\n```\n\n初始化后会生成 `user-data/` 目录，存放你的个人档案和训练记录。\n\n---\n\n## 🔧 运行环境\n\n这不是需要安装的 app 或插件——它是一套**本地文件 + AI 行为规则**。\n\n**需要的环境：**\n\n- 可读写本地文件的 AI 环境\n- 可持续访问同一工作区的多个 Markdown/JSON 文件\n- 最好支持时间获取和长期上下文\n\n**推荐平台：**\n\n- Cursor（原生支持）\n- 其他支持文件读写的 AI IDE/Agent\n\n**没有 Python 也能用：**\n\nAI 可以直接手写 JSON 记录，脚本只是让更新更可靠。\n\n---\n\n## 🌟 为什么用这个？\n\n| 痛点 | 解决方案 |\n|:---|:---|\n| 训练记录枯燥，没动力看 | RPG 成长感 + 剧情推进，训练有反馈 |\n| 中断后不知道从何开始 | 恢复判断 + 强度自动调整 |\n| 通用计划不适合自己 | AI 根据你的历史数据个性化建议 |\n| 换个 app 数据就没了 | 本地 Markdown/JSON，永远属于你 |\n\n---\n\n## 📖 更多资源\n\n- [完整示例存档](examples/completed-save/) — 用了一个月后的样子\n- [训练方法论](references/coach-wang-tan-method.md) — 凯圣王×谭指导的力量训练体系\n- [RPG 规则详解](references/rpg-rules.md) — 等级、属性、经验值计算\n- [叙事引擎](references/story-engine.md) — 训练如何映射为剧情\n- [更新日志](CHANGELOG.md) — 版本变化\n\n---\n\n## 📬 关于\n\n- **小红书**：[@龙酱](https://www.xiaohongshu.com/user/profile/5c63da27000000001202556a)\n- **GitHub**：[k1ein-chen/fitness-coach-rpg](https://github.com/k1ein-chen/fitness-coach-rpg)\n\n---\n\n## ⭐ 觉得有用？\n\n如果这个项目对你有帮助，请给个 **Star** ⭐ 支持一下！\n\n这是对作者最大的鼓励，也能让更多人发现这个项目。\n\n[![Star History](https://img.shields.io/github/stars/k1ein-chen/fitness-coach-rpg?style=social)](https://github.com/k1ein-chen/fitness-coach-rpg)\n\n---\n\n## 📄 许可\n\n[MIT License](./LICENSE)\n\n---\n\n## Quick Start (English)\n\nFitness Coach RPG is a conversation-driven AI fitness coach framework that links workout logging, RPG stat progression, and optional story mode.\n\n**Features:**\n- Chat-based workout tracking (weight, reps, RPE, notes)\n- Auto stat allocation: training → EXP → level up → attribute growth\n- Optional story mode: map real workouts to fantasy adventures\n- Fully customizable worldview. Sword & Sorcery and Wuxia are examples; describe any world you want. A preset Sword & Sorcery world is included if you do not want to start from scratch.\n- Recovery-aware planning with smart intensity adjustment\n- Local Markdown/JSON storage — your data stays yours\n\n**Quick Start:**\n\n**1. Hand it to an agent (recommended)** if you already use Cursor, Claude Code, Codex, or another file-aware agent. Paste:\n\n```text\nPlease install https://github.com/k1ein-chen/fitness-coach-rpg and initialize my profile following the repo README. The worldview is fully customizable (for example isekai, wuxia, otome, or any world I describe). Ask which worldview I want first, then guide me through my first workout.\n```\n\n**2. Clone manually:**\n\n```bash\ngit clone https://github.com/k1ein-chen/fitness-coach-rpg.git\ncd fitness-coach-rpg\npython scripts/init_profile.py --name YourName --theme \"Sword & Sorcery\"\n```\n\n`--theme` is free text. \"Sword & Sorcery\" is only an example.\n\nThen open the project in a file-aware AI environment and say \"Start training\" or \"Initialize profile\".\n\nSee [RELEASE-v0.1.md](./RELEASE-v0.1.md) for more details in English.\n"
+  }
+ },
+ "analyses": {
+  "MengTo/sketchbook": {
+   "summary": "Sketchbook 是一本可翻页的新加坡水彩画册，整个页面只有一个静态 HTML 文件：拖动纸页即可翻书，拖动黄铜放大镜可以近看画作细节。",
+   "facts": [
+    {
+     "claim": "收录九幅新加坡水彩跨页，并配有可跳转到任意画作的目录。",
+     "evidence_refs": [
+      "f1"
+     ],
+     "source_type": "repo_statement"
+    },
+    {
+     "claim": "放大镜可以拖到任意位置，翻页经过时会自动让开。",
+     "evidence_refs": [
+      "f1"
+     ],
+     "source_type": "repo_statement"
+    },
+    {
+     "claim": "书本会随鼠标倾斜产生视差，放大镜不会被一起带动。",
+     "evidence_refs": [
+      "f1"
+     ],
+     "source_type": "repo_statement"
+    },
+    {
+     "claim": "没有构建步骤、没有依赖，也不发起外部请求。",
+     "evidence_refs": [
+      "f1"
+     ],
+     "source_type": "repo_statement"
+    },
+    {
+     "claim": "触屏设备会隐藏放大镜，改为点击翻页。",
+     "evidence_refs": [
+      "f2"
+     ],
+     "source_type": "repo_statement"
+    }
+   ],
+   "highlights": [
+    {
+     "id": "h1",
+     "capability": "可拖动的放大镜",
+     "benefit": "近看水彩画作的笔触细节",
+     "demo": "把放大镜拖到画作细节上查看，翻页经过时它会自动让开",
+     "conditions": "触屏设备会隐藏放大镜",
+     "evidence_refs": [
+      "f1",
+      "f2"
+     ]
+    },
+    {
+     "id": "h2",
+     "capability": "像真实纸张一样弯曲的翻页",
+     "benefit": "翻书手感接近实体画册",
+     "demo": "拖动跨页翻书，或快速甩动让速度决定是否翻过去",
+     "conditions": "",
+     "evidence_refs": [
+      "f1"
+     ]
+    },
+    {
+     "id": "h3",
+     "capability": "跟随鼠标的视差倾斜",
+     "benefit": "页面更有立体感",
+     "demo": "移动鼠标，观察书本朝光标方向倾斜",
+     "conditions": "",
+     "evidence_refs": [
+      "f1"
+     ]
+    }
+   ],
+   "unknowns": [
+    "许可证未知/待核实",
+    "价格未知/待核实"
+   ],
+   "warnings": []
+  },
+  "ollama/ollama": {
+   "summary": "Ollama 用来在本机或云端运行开放模型，提供命令行、REST API 以及 Python、JavaScript 库。",
+   "facts": [
+    {
+     "claim": "支持 macOS、Windows、Linux 安装，并提供官方 Docker 镜像。",
+     "evidence_refs": [
+      "f1"
+     ],
+     "source_type": "repo_statement"
+    },
+    {
+     "claim": "运行 ollama run gemma4 即可与 Gemma 4 对话。",
+     "evidence_refs": [
+      "f1"
+     ],
+     "source_type": "repo_statement"
+    },
+    {
+     "claim": "提供用于运行和管理模型的 REST API，以及 Python、JavaScript 库。",
+     "evidence_refs": [
+      "f1"
+     ],
+     "source_type": "repo_statement"
+    },
+    {
+     "claim": "可以连接 Claude Code、Codex 等现有智能体或应用。",
+     "evidence_refs": [
+      "f1"
+     ],
+     "source_type": "repo_statement"
+    },
+    {
+     "claim": "支持的推理后端为 llama.cpp。",
+     "evidence_refs": [
+      "f2"
+     ],
+     "source_type": "repo_statement"
+    }
+   ],
+   "highlights": [
+    {
+     "id": "h1",
+     "capability": "一条命令在本机运行开放模型",
+     "benefit": "在自己电脑上直接试用模型",
+     "demo": "在终端运行 ollama run gemma4，直接开始对话",
+     "conditions": "需要先在 macOS、Windows 或 Linux 上安装 Ollama",
+     "evidence_refs": [
+      "f1"
+     ]
+    },
+    {
+     "id": "h2",
+     "capability": "REST API 与 Python、JavaScript 库",
+     "benefit": "把本地模型接进自己的程序",
+     "demo": "向本机 11434 端口的聊天接口发送一句提问",
+     "conditions": "",
+     "evidence_refs": [
+      "f1",
+      "f2"
+     ]
+    },
+    {
+     "id": "h3",
+     "capability": "接入现有编程智能体",
+     "benefit": "让 Claude Code、Codex 等工具使用 Ollama 提供的模型",
+     "demo": "运行 ollama launch claude 启动对应集成",
+     "conditions": "",
+     "evidence_refs": [
+      "f1"
+     ]
+    }
+   ],
+   "unknowns": [
+    "本机运行所需的硬件配置未在资料中说明，待核实"
+   ],
+   "warnings": []
+  }
+ },
+ "writings": {
+  "sketchbook": {
+   "script": {
+    "pain": "作品集里的画作细节太小，想让观众看得更清楚？",
+    "intro": "每天分享好用的工具，今天讲sketchbook。",
+    "feature": "这个新加坡水彩画册内置可拖动的放大镜，鼠标移动时书本会跟随倾斜；翻页经过放大镜时，它还会自动让开。",
+    "example": "打开页面，用鼠标把放大镜拖到画作细节上查看。触屏设备会隐藏放大镜，改用点击翻页。"
+   },
+   "copy": {
+    "body": "Sketchbook 把新加坡水彩画做成了交互式画册：拖动放大镜查看细节，移动鼠标让书本产生倾斜视差，翻页时放大镜会自动避让。触屏设备隐藏放大镜，改为点击翻页。项目源码可在 GitHub 的 MengTo/sketchbook 查看；许可证信息尚未明确。",
+    "tags": [
+     "网页交互",
+     "前端设计",
+     "GitHub项目",
+     "Sketchbook"
+    ],
+    "title": "用放大镜看画作细节"
+   },
+   "evidence_map": {
+    "feature": [
+     "f1"
+    ],
+    "example": [
+     "f1",
+     "f2"
+    ],
+    "copy": [
+     "f1",
+     "f2"
+    ]
+   }
+  },
+  "ollama": {
+   "script": {
+    "pain": "想在自己电脑上试用开放模型，又不想折腾复杂的环境配置？",
+    "intro": "每天分享好用的工具，今天讲ollama。",
+    "feature": "这个工具用来在本机运行开放模型，需要先在 macOS、Windows 或 Linux 上安装 Ollama。装好之后一条命令就能下载并运行模型，它还提供 REST API 和 Python、JavaScript 库。",
+    "example": "在终端输入 ollama run gemma4，就能直接和 Gemma 4 对话；想接进自己的程序，可以调用本机 11434 端口的聊天接口。"
+   },
+   "copy": {
+    "body": "Ollama 可以在本机运行开放模型：安装后在终端输入 ollama run gemma4 即可对话，也能通过 REST API 或 Python、JavaScript 库接入自己的程序。支持 macOS、Windows、Linux，并提供官方 Docker 镜像。项目源码在 GitHub 的 ollama/ollama，采用 MIT 许可证。",
+    "tags": [
+     "AI工具",
+     "本地大模型",
+     "GitHub项目",
+     "Ollama"
+    ],
+    "title": "在自己电脑上跑开放模型"
+   },
+   "evidence_map": {
+    "feature": [
+     "f1"
+    ],
+    "example": [
+     "f1"
+    ],
+    "copy": [
+     "f1"
+    ]
+   }
+  }
+ },
+ "discovery": {
+  "topic": "健身",
+  "repositories": [
+   "ZHENGYANG-QIAN/AI-FITNESS",
+   "BorisBW/claude-fitness-cn",
+   "k1ein-chen/fitness-coach-rpg"
+  ],
+  "briefs": {
+   "ZHENGYANG-QIAN/AI-FITNESS": {
+    "purpose": {
+     "text": "识别健身动作，辅助进行动作计数与分类。",
+     "evidence": [
+      {
+       "ref": "r653684949-f1",
+       "quote": "基于人体关键点检测的健身动作计数应用"
+      },
+      {
+       "ref": "r653684949-f1",
+       "quote": "动作姿势分类"
+      }
+     ]
+    },
+    "feature": {
+     "text": "通过人体关键点判断动作，包含深蹲、俯卧撑相关示例。",
+     "evidence": [
+      {
+       "ref": "r653684949-f1",
+       "quote": "对于类似深蹲和俯卧撑这样的常见运动，一个up和一个down是一个完整的动作"
+      }
+     ]
+    },
+    "usage": {
+     "text": "提供安卓端和电脑端实现，需要自行运行或构建。",
+     "evidence": [
+      {
+       "ref": "r653684949-f1",
+       "quote": "移动端部署目前完成了安卓应用的构建。"
+      },
+      {
+       "ref": "r653684949-f1",
+       "quote": "PC端部署使用了PyQt5"
+      }
+     ]
+    },
+    "requirements": {
+     "text": "安卓端需 Android Studio；电脑端使用 Python、PyQt5 等环境。",
+     "evidence": [
+      {
+       "ref": "r653684949-f1",
+       "quote": "Android 开发工具 - Android Studio 中进行修改、调试和生成 APK 文件"
+      },
+      {
+       "ref": "r653684949-f1",
+       "quote": "PC端部署使用了PyQt5，它是 Qt 应用程序框架在 Python 中的封装。"
+      }
+     ]
+    }
+   },
+   "BorisBW/claude-fitness-cn": {
+    "purpose": {
+     "text": "结合手表与力量训练记录，生成日常训练建议和复盘。",
+     "evidence": [
+      {
+       "ref": "r1170601643-f1",
+       "quote": "Coach Paddy reads your watch + strength-log data, turns it into actionable coaching (morning readiness, evening recaps, weekly reviews, adaptive plans)"
+      }
+     ]
+    },
+    "feature": {
+     "text": "结合睡眠、心率与训练负荷评估恢复状态，训练记录保存在本地。",
+     "evidence": [
+      {
+       "ref": "r1170601643-f1",
+       "quote": "adjusted by sleep, HRV, energy, RHR trend, and active injury"
+      },
+      {
+       "ref": "r1170601643-f1",
+       "quote": "records everything in **plain-text local files you own**"
+      }
+     ]
+    },
+    "usage": {
+     "text": "在 Claude Code 中使用教练技能，可另部署手机看板。",
+     "evidence": [
+      {
+       "ref": "r1170601643-f1",
+       "quote": "A data-driven, multi-sport AI fitness coach for [Claude Code]"
+      },
+      {
+       "ref": "r1170601643-f1",
+       "quote": "mobile dashboard you can deploy to Vercel"
+      }
+     ]
+    },
+    "requirements": {
+     "text": "需 Claude Code 并接入手表数据；Apple Watch 需另配快捷指令。",
+     "evidence": [
+      {
+       "ref": "r1170601643-f1",
+       "quote": "A data-driven, multi-sport AI fitness coach for [Claude Code]"
+      },
+      {
+       "ref": "r1170601643-f2",
+       "quote": "| Apple Watch | `fitness-coach.md` **and** `apple-watch-fitness-coach.md` | no MCP — set up the Shortcut (step 1) |"
+      }
+     ]
+    }
+   },
+   "k1ein-chen/fitness-coach-rpg": {
+    "purpose": {
+     "text": "用对话记录训练，把健身过程变成可以升级的 RPG 冒险。",
+     "evidence": [
+      {
+       "ref": "r1228695623-f1",
+       "quote": "把枯燥的现实训练，变成一场可以升级记录的异世界冒险"
+      }
+     ]
+    },
+    "feature": {
+     "text": "把训练记录与 RPG 属性成长、剧情推进联动，并追踪重量和次数。",
+     "evidence": [
+      {
+       "ref": "r1228695623-f1",
+       "quote": "训练记录、RPG 属性成长、剧情推进三者联动"
+      },
+      {
+       "ref": "r1228695623-f1",
+       "quote": "自动追踪重量、次数、RPE、体感反馈"
+      }
+     ]
+    },
+    "usage": {
+     "text": "交给能读写文件的 AI Agent 安装并初始化档案，再对话开始训练。",
+     "evidence": [
+      {
+       "ref": "r1228695623-f1",
+       "quote": "已经有能读写文件的 AI Agent（Cursor、Claude Code、Codex 等）时，把安装和第一次训练交给它。"
+      },
+      {
+       "ref": "r1228695623-f1",
+       "quote": "在支持读写本地文件的 AI 里打开项目"
+      }
+     ]
+    },
+    "requirements": {
+     "text": "需要可读写本地文件的 AI 环境；脚本只用 Python 标准库，可不装。",
+     "evidence": [
+      {
+       "ref": "r1228695623-f1",
+       "quote": "脚本只用 Python 标准库，无需安装依赖。没有 Python？直接复制模板也能用。"
+      }
+     ]
+    }
+   }
+  },
+  "scores": {
+   "ZHENGYANG-QIAN/AI-FITNESS": {
+    "relevance": 3,
+    "completeness": 2,
+    "demonstration": 2,
+    "accessibility": 0,
+    "reason": "基于人体关键点识别健身动作并计数，演示画面直观。",
+    "barrier": "需要自行构建安卓或电脑端程序。"
+   },
+   "BorisBW/claude-fitness-cn": {
+    "relevance": 3,
+    "completeness": 2,
+    "demonstration": 1,
+    "accessibility": 0,
+    "reason": "结合手表数据给出每日训练建议，贴合健身选题。",
+    "barrier": "需要在 Claude Code 中使用，并连接运动手表数据。"
+   },
+   "k1ein-chen/fitness-coach-rpg": {
+    "relevance": 3,
+    "completeness": 2,
+    "demonstration": 2,
+    "accessibility": 1,
+    "reason": "把训练记录做成 RPG 成长，对话即可演示。",
+    "barrier": "需要能读写本地文件的 AI 环境。"
+   }
+  }
+ }
+}

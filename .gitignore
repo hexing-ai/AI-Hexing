@@ -17,6 +17,7 @@ coverage.xml
 .coverage
 
 frontend/.next-qa/
+frontend/.next-demo/
 
 # Local working material is retained on disk, not distributed.
 /AI产品Vibe Coding通用技术栈手册.md

@@ -37,6 +37,28 @@ def test_busy_port_never_starts_or_stops_another_service():
             launcher.check_ports()
 
 
+def test_demo_uses_isolated_ports_and_skips_existing_seed(tmp_path):
+    launcher = load("demo")
+    with patch.object(socket.socket, "bind", side_effect=OSError("busy")):
+        with pytest.raises(SystemExit, match="28060"):
+            launcher.check_ports()
+    with (
+        patch.object(launcher, "ROOT", tmp_path),
+        patch.object(launcher, "directory", return_value=tmp_path / "data" / "demo"),
+    ):
+        (tmp_path / ".venv/bin").mkdir(parents=True)
+        (tmp_path / ".venv/bin/python").touch()
+        (tmp_path / "frontend/node_modules/next").mkdir(parents=True)
+        demo_dir = tmp_path / "data" / "demo"
+        demo_dir.mkdir(parents=True)
+        (demo_dir / "credentials.json").write_text('{"login_name":"demo","password":"x","invite_code":"A"}')
+        creds = launcher.prepare(reset=False)
+        assert creds["login_name"] == "demo"
+        assert launcher.process_env()["DATA_DIR"] == str(demo_dir)
+        assert launcher.process_env()["PROVIDER_MODE"] == "mock"
+        assert "ai_hexing.db" not in launcher.process_env()["DATABASE_URL"]
+
+
 def test_shutdown_terminates_owned_process_group(tmp_path):
     launcher = load("start")
     ready = tmp_path / "ready"

@@ -169,6 +169,9 @@ class Providers:
                     missing.append("VOICE_ENDPOINT=official-beijing-endpoint")
         return missing
 
+    def mock_search_names(self, inputs):
+        return [f"demo/tool-{i}" for i in range(8)]
+
     def check(self, kind):
         if self.readiness(kind):
             raise AppError("CAPABILITY_UNAVAILABLE", "真实服务尚未配置完成，请查看接入状态。", 503)

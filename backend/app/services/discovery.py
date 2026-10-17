@@ -16,7 +16,7 @@ from backend.app.services.providers import bounded_get
 
 def search(providers, inputs):
     if providers.s.provider_mode == "mock":
-        names = [f"demo/tool-{i}" for i in range(8)]
+        names = providers.mock_search_names(inputs)
     else:
         providers.check("import")
         headers = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2026-03-10"}

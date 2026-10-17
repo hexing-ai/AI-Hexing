@@ -70,3 +70,16 @@ npm --prefix frontend run dev -- --hostname 127.0.0.1 --port 3060
 ## 在线 Demo
 
 [免安装体验](https://hexing-ai.github.io/AI-Hexing/) 使用独立公开资料快照。可比较、编辑、复制、下载文本和查看 Bot；无登录和持久化、无真实生成或音频。浏览器复制权限关闭时可以直接选中文字复制。
+
+## 本机完整演示
+
+面试或本地讲解时，用隔离的模拟工作台，带已走完的示例任务，不读写正式数据库，也不调用付费服务：
+
+```bash
+python3.11 scripts/setup.py    # 只需一次，已安装可跳过
+python3.11 scripts/demo.py     # 写入示例后启动；--reset 会清空 data/demo 再写一遍
+```
+
+Web 显示 Ready 后打开 **http://127.0.0.1:23060/discover**。终端会打印登录账户、密码和访客邀请码。演示占用 23060（Web）和 28060（API），与日常的 3060 / 8010 以及 QA 端口分开。
+
+预置内容：Sketchbook 已确认口播、文案、正式配音和导出包；Ollama 已确认文稿；「健身」主题下有 3 条发现结果；两个榜单草稿。配音是模拟测试音。按 Ctrl+C 停止本次演示进程。

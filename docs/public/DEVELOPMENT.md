@@ -9,6 +9,7 @@ backend/
   app/services/     搜索、生成、配音、导出与预算
   app/services/prompts/ 版本化 Prompt
   alembic/versions/ 数据库迁移
+  demo/             本机演示回放素材与 Worker
   tests/            隔离测试与模拟浏览器环境
 frontend/
   app/              页面路由
@@ -16,7 +17,7 @@ frontend/
   lib/              API、数据整理和第三方 Bot 引擎
   public/           静态资源与第三方许可证
 demo/               无账号、无 API 的静态交互 Demo
-scripts/            安装、服务启动与 Git 发布文件检查
+scripts/            安装、日常启动、本机演示与 Git 发布文件检查
 docs/public/        对外使用与开发文档
 ```
 

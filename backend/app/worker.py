@@ -753,12 +753,12 @@ class Worker:
                         p.unlink()
 
 
-def main():
+def main(worker=None):
     logging.basicConfig(level=logging.WARNING)
     stop = threading.Event()
     signal.signal(signal.SIGTERM, lambda *_: stop.set())
     signal.signal(signal.SIGINT, lambda *_: stop.set())
-    worker = Worker()
+    worker = worker or Worker()
     last_cleanup = 0
     while not stop.is_set():
         worker.run_once()

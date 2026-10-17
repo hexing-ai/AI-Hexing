@@ -16,6 +16,15 @@ AI-Hexing 是面向 AI 工具内容创作者的本地工作台：从寻找工具
 
 [打开交互 Demo →](https://hexing-ai.github.io/AI-Hexing/)
 
+本机讲解完整工作台（发现、任务、配音、导出、访客只读）时，用隔离演示，不碰正式数据：
+
+```bash
+python3.11 scripts/setup.py
+python3.11 scripts/demo.py
+```
+
+打开 **http://127.0.0.1:23060/discover**，终端里的账户和邀请码可直接登录。详见 [使用说明 · 本机完整演示](docs/public/USAGE.md#本机完整演示)。
+
 无需注册或密钥：比较 3 个健身工具，选择一个进入四段示例口播，编辑后下载文本；也可以查看 24 个工具 Bot。Demo 使用公开资料快照和规则组合示例，不调用真实模型、不收集录音、不连接你的本地工作台。
 
 [![在线演示：从工具到内容](docs/public/images/demo.png)](https://hexing-ai.github.io/AI-Hexing/)
