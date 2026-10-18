@@ -2,7 +2,7 @@
 
 **把 GitHub 工具，变成一条能录、能讲、能发布的短视频创作素材。**
 
-[在线体验](https://hexing-ai.github.io/AI-Hexing/) · [快速运行](#快速运行) · [使用说明](docs/public/USAGE.md) · [架构](docs/public/DEVELOPMENT.md)
+[看完整工作台](#看完整工作台) · [快速运行](#快速运行) · [使用说明](docs/public/USAGE.md) · [架构](docs/public/DEVELOPMENT.md)
 
 发现工具 → 核对亮点 → 四段口播 → 本人声音配音 → 素材包导出。减少在仓库资料、文稿和音频工具之间来回整理的工作。
 
@@ -12,30 +12,44 @@ AI-Hexing 是面向 AI 工具内容创作者的本地工作台：从寻找工具
 
 默认使用模拟服务，可以不配置模型密钥体验流程。真实 GitHub、Qwen 与 CosyVoice 已接入，并完成过一份真实配音及完整素材包验收。当前版本以单创作者、本机运行为范围。
 
-## 30 秒体验
+## 看完整工作台
 
-[打开交互 Demo →](https://hexing-ai.github.io/AI-Hexing/)
-
-本机讲解完整工作台（发现、任务、配音、导出、访客只读）时，用隔离演示，不碰正式数据：
+公开介绍用的就是本机工作台，不是另一套简化页面。克隆后一条命令启动带示例数据的演示：不读写正式数据库，也不调用付费接口。
 
 ```bash
+git clone https://github.com/hexing-ai/AI-Hexing.git
+cd AI-Hexing
 python3.11 scripts/setup.py
 python3.11 scripts/demo.py
 ```
 
-打开 **http://127.0.0.1:23060/discover**，终端里的账户和邀请码可直接登录。详见 [使用说明 · 本机完整演示](docs/public/USAGE.md#本机完整演示)。
+打开 **http://127.0.0.1:23060/discover**。终端会打印演示账户、密码和访客邀请码。`Ctrl+C` 只停止这次演示。日常自己用仍走下面的[快速运行](#快速运行)。
 
-无需注册或密钥：比较 3 个健身工具，选择一个进入四段示例口播，编辑后下载文本；也可以查看 24 个工具 Bot。Demo 使用公开资料快照和规则组合示例，不调用真实模型、不收集录音、不连接你的本地工作台。
+配音在演示里是测试音。界面、任务状态和访客只读与正式工作台相同。
 
-[![在线演示：从工具到内容](docs/public/images/demo.png)](https://hexing-ai.github.io/AI-Hexing/)
+**发现工具。** 按「健身」搜完后，每个仓库有中文介绍、评分和来源，可以比较，也可以导入。
 
-## 完整工作台
+![发现工具：健身主题的三个候选](docs/public/images/discover.png)
 
-以下为独立模拟环境的工作台预览，不包含正式账号、录音或模型凭证；模拟音频只是测试音。在线 Demo 与榜单预览通过 ego lite 页面打印渲染生成，创作任务图为既有隔离验收截图。
+**创作任务。** Sketchbook 的口播、配音、文案和素材包都已确认。Ollama 的文稿已确认，配音还没做。
 
-![创作任务入口](docs/public/images/workspace.png)
+![创作任务：一份已导出，一份待配音](docs/public/images/tasks.png)
 
-![工具封神榜](docs/public/images/bots.png)
+**从口播到素材包。** 四段口播、32 秒配音、文案确认和导出在同一页。
+
+![Sketchbook 任务：口播、配音与导出](docs/public/images/task.png)
+
+**我的声音。** 音色可以试听、改名、设为默认，并拿到已完成的配音。
+
+![我的声音：演示音色](docs/public/images/voices.png)
+
+**工具封神榜。** 内置精选工具和这次演示里的 Sketchbook、Ollama 在同一张榜上。
+
+![工具封神榜](docs/public/images/ranking.png)
+
+**访客只读。** 用邀请码进入后只能看发现、任务和榜单。声音、费用、处理记录和接入设置打不开。
+
+![访客打开声音页会被拦住](docs/public/images/guest.png)
 
 ## 能做什么
 
@@ -67,7 +81,7 @@ python3.11 scripts/start.py
 
 Web 显示 `Ready` 后打开 **http://127.0.0.1:3060/discover**。`Ctrl+C` 同时停止本次启动的 API、worker 和 Web。端口 3060 / 8010 被占用时，脚本会提示退出，不结束其他进程。首次安装耗时取决于网络；不承诺冷启动三分钟完成。
 
-**第一次体验：** 登录 → 创作任务 → 导入 `https://github.com/ollama/ollama` → 分析并复核资料 → 创建任务 → 生成并编辑口播。默认 mock 只演示流程，既不搜索真实工具，也不产生真实克隆音。
+**先看做完的例子：** `python3.11 scripts/demo.py`，打开 http://127.0.0.1:23060/discover 。**自己从头做：** 登录 → 创作任务 → 导入 `https://github.com/ollama/ollama` → 分析并复核资料 → 创建任务 → 生成并编辑口播。默认 mock 只演示流程，既不搜索真实工具，也不产生真实克隆音。
 
 - [逐步操作与手动启动](docs/public/USAGE.md)
 - [接入真实 GitHub、Qwen、CosyVoice 与费用控制](docs/public/CONFIGURATION.md)
